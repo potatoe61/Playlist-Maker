@@ -7,5 +7,8 @@
     <dimen name="text">16sp</dimen>
     <dimen name="text_main">22sp</dimen>
     <dimen name="margin_end">18dp</dimen>
+<<<<<<< HEAD
     <dimen name="margin_end2">18dp</dimen>
+=======
+>>>>>>> origin/newbranch
 </resources>
