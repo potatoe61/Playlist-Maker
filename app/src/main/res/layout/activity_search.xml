@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@color/white">
+    android:padding="16dp">
 
     <!-- Заголовок -->
     <FrameLayout
         style="@style/Settings_FrameLayoutStyle"
         android:layout_height="52dp">
+
         <Button
             android:id="@+id/back"
             style="@style/Widget.AppCompat.Button.Borderless"
@@ -19,38 +20,39 @@
             android:backgroundTint="@color/white"
             app:icon="@drawable/vector"
             app:iconGravity="textStart"
-            app:iconTint="@color/black">
-        </Button>
+            app:iconTint="@color/black"></Button>
+
         <TextView
             style="@style/Settings_TextViewStyle"
             android:layout_height="@dimen/settings"
-            android:paddingStart="@dimen/settings"
             android:layout_marginStart="4dp"
-            android:text="@string/search"
-            android:textSize="24sp"
             android:fontFamily="@font/ys_display_medium"
-            />
+            android:paddingStart="@dimen/settings"
+            android:text="@string/search"
+            android:textSize="24sp" />
     </FrameLayout>
+
     <FrameLayout
         style="@style/Settings_FrameLayoutStyle"
         android:layout_height="52dp"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
+
         <EditText
             android:id="@+id/searchEditText"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:maxLines="1"
             android:layout_width="match_parent"
             android:layout_height="36dp"
-            android:hint="@string/search"
-            android:textColorHint="@color/hint"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/rounded_edittext"
             android:drawableStart="@drawable/search"
             android:drawableTint="@color/hint"
-            android:background="@drawable/rounded_edittext"
-            android:inputType="text"/>
+            android:hint="@string/search"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textColorHint="@color/hint" />
+
         <ImageView
             android:id="@+id/clear"
             android:layout_width="24dp"
