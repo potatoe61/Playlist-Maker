@@ -4,119 +4,81 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@color/white"
-    >
+    android:background="@color/white">
+
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:orientation="horizontal"
-        >
+        style="@style/Settings_FrameLayoutStyle">
         <Button
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="@dimen/settings"
-            android:padding="4dp"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/settings"
             android:backgroundTint="@color/white"
             app:icon="@drawable/vector"
             app:iconGravity="textStart"
-            app:iconTint="@color/black"
-            android:gravity="center"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            >
+            app:iconTint="@color/black">
         </Button>
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            style="@style/Settings_TextViewStyle"
+            android:layout_height="@dimen/settings"
             android:paddingStart="@dimen/settings"
+            android:layout_marginStart="4dp"
             android:text="@string/settings"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_main"
-            android:gravity="left|center"/>
+            android:textSize="22sp"
+            android:fontFamily="@font/ys_display_medium"
+            />
     </FrameLayout>
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/menu"
-        android:orientation="horizontal"
-        android:layout_marginTop="24dp">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingLeft="@dimen/margin"
-            android:text="@string/dark_mode"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text"
-            android:gravity="left|center"/>
 
+    <FrameLayout
+        style="@style/Settings_FrameLayoutStyle">
+        <TextView
+
+            style="@style/Settings_TextViewStyle"
+            android:text="@string/dark_mode" />
         <Switch
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginEnd="6dp"
             android:layout_gravity="center|end"
             android:gravity="right|center"
             />
     </FrameLayout>
+
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:id="@+id/share"
+        style="@style/Settings_FrameLayoutStyle">
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/menu"
-            android:paddingLeft="@dimen/margin"
-            android:text="@string/share"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text"
-            android:gravity="left|center"/>
+            style="@style/Settings_TextViewStyle"
+            android:text="@string/share" />
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            style="@style/Settings_ImageStyle"
             android:src="@drawable/share"
-            android:scaleType="center"
-            android:layout_gravity="end"
-            android:layout_marginEnd="@dimen/margin_end"
-        />
+            />
     </FrameLayout>
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/menu"
-            android:paddingLeft="@dimen/margin"
-            android:text="@string/support"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text"
-            android:gravity="left|center"/>
 
+    <FrameLayout
+        android:id="@+id/support"
+        style="@style/Settings_FrameLayoutStyle">
+
+        <TextView
+            style="@style/Settings_TextViewStyle"
+            android:text="@string/support" />
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            style="@style/Settings_ImageStyle"
             android:src="@drawable/support"
-            android:scaleType="center"
-            android:layout_gravity="end"
-            android:layout_marginEnd="@dimen/margin_end"
             />
     </FrameLayout>
+
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/menu"
-            android:paddingStart="@dimen/margin"
-            android:text="@string/agreement"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text"
-            android:gravity="left|center"/>
+        android:id="@+id/agreement"
+        style="@style/Settings_FrameLayoutStyle">
 
+        <TextView
+            style="@style/Settings_TextViewStyle"
+            android:text="@string/agreement" />
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            style="@style/Settings_ImageStyle"
             android:src="@drawable/arrow_forfard"
-            android:scaleType="center"
-            android:layout_gravity="end"
-            android:layout_marginEnd="@dimen/margin_end"
             />
     </FrameLayout>
-</LinearLayout>
 
+</LinearLayout>
