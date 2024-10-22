@@ -16,11 +16,6 @@ import com.google.android.material.color.MaterialColors
 
 class SearchActivity : AppCompatActivity() {
 
-    companion object {
-        private const val LOG_TAG = "SearchActivity"
-        private const val EDIT_TEXT_VIEW_KEY = "EDIT_TEXT_VIEW_KEY"
-    }
-
     private lateinit var searchEditText: EditText
 
     private var savedValue: String? = null
@@ -44,14 +39,13 @@ class SearchActivity : AppCompatActivity() {
             searchEditText.text.clear()
             clearButton.visibility = View.GONE
             val inputMethodManager = getSystemService(InputMethodManager::class.java)
-
+            inputMethodManager.hideSoftInputFromWindow(searchEditText.windowToken, 0)
         }
         val textWatcherEditText = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 savedValue = s.toString()
-                Log.i(LOG_TAG, "Введеное значение: $savedValue")
                 clearButton.isVisible = isClearButtonVisible(s)
             }
 
@@ -72,4 +66,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun isClearButtonVisible(s: CharSequence?): Boolean = !s.isNullOrEmpty()
+    companion object {
+        private const val EDIT_TEXT_VIEW_KEY = "EDIT_TEXT_VIEW_KEY"
+    }
 }
