@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Settings_FrameLayoutStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="Settings_TextViewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/menu</item>
+        <item name="android:paddingLeft">@dimen/margin</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/text</item>
+        <item name="android:gravity">left|center</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
+    </style>
+
+    <style name="Settings_ImageStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:tint">@color/images</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_gravity">end</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:scaleType">center</item>
+        <item name="android:layout_marginEnd">@dimen/margin_end</item>
+    </style>
+
+    <style name="Main_LinearLayoutStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@color/bg</item>
+    </style>
+
+    <style name="Main_TextViewStyle">
+        <item name="android:padding">@dimen/margin</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">start</item>
+        <item name="android:textColor">@color/title</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textFontWeight">500</item>
+    </style>
+
+    <style name="Main_ButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_marginStart">@dimen/margin</item>
+        <item name="android:layout_marginEnd">@dimen/margin</item>
+        <item name="android:backgroundTint">#FFFFFFFF</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconTint">#FF000000</item>
+        <item name="cornerRadius">@dimen/radius</item>
+        <item name="android:textColor">#FF000000</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">22sp</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:textFontWeight">500</item>
+    </style>
+</resources>
