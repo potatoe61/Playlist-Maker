@@ -8,4 +8,6 @@
     <color name="hint">#1A1B22</color>
     <color name="title">#FFFFFFFF</color>
     <color name="images">#FFFFFFFF</color>
+    <color name="track_lower_part">#FFFFFF</color>
+    <color name="cross">#1A1B22</color>
 </resources>

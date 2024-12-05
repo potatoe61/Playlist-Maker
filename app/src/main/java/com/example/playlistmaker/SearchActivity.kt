@@ -11,6 +11,8 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.color.MaterialColors
 
 
@@ -49,7 +51,12 @@ class SearchActivity : AppCompatActivity() {
                 clearButton.isVisible = isClearButtonVisible(s)
             }
 
-            override fun afterTextChanged(s: Editable?) {}
+            override fun afterTextChanged(s: Editable?) {
+                val recyclerView: RecyclerView = findViewById(R.id.list)
+                recyclerView.layoutManager = LinearLayoutManager(this@SearchActivity)
+                val trackAdapter = TrackAdapter(trackList)
+                recyclerView.adapter = trackAdapter
+            }
         }
 
         searchEditText.addTextChangedListener(textWatcherEditText)
