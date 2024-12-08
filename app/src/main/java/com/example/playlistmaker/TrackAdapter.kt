@@ -1,6 +1,6 @@
 package com.example.playlistmaker
 
-
+import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,10 +34,12 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         trackNameTextView.text = track.trackName
         artistNameTextView.text = track.artistName
         trackTimeTextView.text = track.trackTime
+        val density = Resources.getSystem().displayMetrics.density
+        val cornerRadius = (2 * density).toInt()
         Glide.with(itemView)
             .load(track.artworkUrl100)
             .placeholder(R.drawable.placeholder_track)
-            .transform(RoundedCorners(2))
+            .transform(RoundedCorners(cornerRadius))
             .error(R.drawable.placeholder_track)
             .into(artworkImageView)
     }

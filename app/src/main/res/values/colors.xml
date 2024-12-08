@@ -10,4 +10,5 @@
     <color name="images">#AEAFB4</color>
     <color name="track_lower_part">#AEAFB4</color>
     <color name="cross">#AEAFB4</color>
+    <color name="search_text">#000000</color>
 </resources>

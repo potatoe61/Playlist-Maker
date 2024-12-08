@@ -35,7 +35,10 @@ class SearchActivity : AppCompatActivity() {
 
         searchEditText = findViewById(R.id.searchEditText)
         searchEditText.setText(savedValue)
-
+        val recyclerView: RecyclerView = findViewById(R.id.list)
+        recyclerView.layoutManager = LinearLayoutManager(this@SearchActivity)
+        val trackAdapter = TrackAdapter(trackList)
+        recyclerView.adapter = trackAdapter
         val clearButton = findViewById<ImageView>(R.id.clear)
         clearButton.setOnClickListener {
             searchEditText.text.clear()
@@ -52,10 +55,6 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                val recyclerView: RecyclerView = findViewById(R.id.list)
-                recyclerView.layoutManager = LinearLayoutManager(this@SearchActivity)
-                val trackAdapter = TrackAdapter(trackList)
-                recyclerView.adapter = trackAdapter
             }
         }
 

@@ -37,7 +37,7 @@
             <TextView
                 android:id="@+id/artist_name"
                 android:layout_width="wrap_content"
-                android:layout_height="13dp"
+                android:layout_height="wrap_content"
                 android:textColor="@color/track_lower_part"
                 android:textSize="11sp"
                 tools:text="Test Band Name" />
@@ -45,14 +45,14 @@
             <ImageView
                 android:id="@+id/blob"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:src="@drawable/blob"
-                android:paddingTop="1.5dp"
                 app:tint="@color/track_lower_part" />
+
             <TextView
                 android:id="@+id/track_length"
                 android:layout_width="wrap_content"
-                android:layout_height="13dp"
+                android:layout_height="wrap_content"
                 android:textColor="@color/track_lower_part"
                 android:textSize="11sp"
                 tools:text="15 gazilion minutes" />
