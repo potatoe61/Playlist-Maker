@@ -13,5 +13,7 @@
     <string name="email_subject">A message to Playlist Maker developers</string>
     <string name="email_message">Thank you to all developers for a very cool app!</string>
     <string name="practicum_offer_link">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="album_cover">Album cover</string>
+    <string name="track_activate">The button to go to the track</string>
 
 </resources>

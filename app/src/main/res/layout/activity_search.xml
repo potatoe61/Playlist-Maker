@@ -57,6 +57,7 @@
             android:inputType="text"
             android:maxLines="1"
             android:textSize="16sp"
+            android:textColor="@color/search_text"
             android:textColorHint="@color/hint" />
 
         <ImageView
@@ -66,10 +67,18 @@
             android:layout_gravity="center|end"
             android:layout_marginEnd="16dp"
             android:src="@drawable/clear"
+            app:tint="@color/cross"
             android:visibility="gone"/>
 
 
 </FrameLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        />
 
 </LinearLayout>
