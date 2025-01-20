@@ -1,5 +1,5 @@
 package com.example.playlistmaker
-
+import android.util.Log;
 import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
@@ -11,8 +11,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import kotlin.collections.ArrayList
 
-class TrackAdapter(private val trackList: List<Track>) : RecyclerView.Adapter<TrackViewHolder>() {
+class TrackAdapter(private val trackList: ArrayList<Track>) : RecyclerView.Adapter<TrackViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.activity_tracks, parent, false)
         return TrackViewHolder(view)
@@ -33,7 +34,8 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(track: Track) {
         trackNameTextView.text = track.trackName
         artistNameTextView.text = track.artistName
-        trackTimeTextView.text = track.trackTime
+        //Log.d("TrackTimeDebug", "Track Time: ${track.trackTime}")
+        trackTimeTextView.text = Time.millisToStrFormat(track.trackTimeMillis)
         val density = Resources.getSystem().displayMetrics.density
         val cornerRadius = (2 * density).toInt()
         Glide.with(itemView)

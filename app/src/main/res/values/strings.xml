@@ -14,5 +14,7 @@
     <string name="practicum_offer_link">https://yandex.ru/legal/practicum_offer/</string>
     <string name="album_cover">Обложка альбома</string>
     <string name="track_activate">Кнопка перехода на трек</string>
-
+    <string name="connectivity_issue">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="refresh">Обновить</string>
+    <string name="not_found">Ничего не нашлось</string>
 </resources>

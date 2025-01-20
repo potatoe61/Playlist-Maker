@@ -15,5 +15,7 @@
     <string name="practicum_offer_link">https://yandex.ru/legal/practicum_offer/</string>
     <string name="album_cover">Album cover</string>
     <string name="track_activate">The button to go to the track</string>
-
+    <string name="connectivity_issue">No internet connection\n\nLoading failed. Check your internet settings</string>
+    <string name="refresh">Refresh</string>
+    <string name="not_found">Nothing was found</string>
 </resources>
