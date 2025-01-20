@@ -16,7 +16,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import android.util.Log;
+import android.util.Log
 
 class SearchActivity : AppCompatActivity() {
     private enum class StateType {
@@ -37,6 +37,7 @@ class SearchActivity : AppCompatActivity() {
     private val itunesService = retrofit.create(Rest::class.java)
     private val trackList = ArrayList<Track>()
     private val trackAdapter = TrackAdapter(trackList)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -69,6 +70,9 @@ class SearchActivity : AppCompatActivity() {
             searchEditText.text.clear()
             recyclerViewTrack.visibility = View.GONE
             clearButton.visibility = View.GONE
+            errorIc.visibility=View.GONE
+            errorText.visibility=View.GONE
+
             val inputMethodManager = getSystemService(InputMethodManager::class.java)
             inputMethodManager.hideSoftInputFromWindow(searchEditText.windowToken, 0)
         }
@@ -143,8 +147,6 @@ class SearchActivity : AppCompatActivity() {
                 recyclerViewTrack.visibility = View.GONE
                 error.visibility = View.VISIBLE
                 refreshButt.visibility = View.VISIBLE
-
-
                 errorIc.setImageResource(R.drawable.no_internet)
                 errorText.setText(R.string.connectivity_issue)
             }
@@ -152,6 +154,8 @@ class SearchActivity : AppCompatActivity() {
                 recyclerViewTrack.visibility = View.GONE
                 error.visibility = View.VISIBLE
                 refreshButt.visibility = View.GONE
+                errorIc.visibility=View.VISIBLE
+                errorText.visibility=View.VISIBLE
                 errorIc.setImageResource(R.drawable.sad_face)
                 errorText.setText(R.string.not_found)
             }
