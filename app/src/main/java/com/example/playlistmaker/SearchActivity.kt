@@ -20,7 +20,7 @@ import android.util.Log
 
 class SearchActivity : AppCompatActivity() {
     private enum class StateType {
-        CONNECTION_ERROR, NOT_FOUND, SEARCH_RESULT
+        CONNECTION_ERROR, NOT_FOUND, SEARCH_RESULT, HISTORY_LIST,
     }
     private lateinit var searchEditText: EditText
     private lateinit var recyclerViewTrack: RecyclerView
@@ -36,18 +36,19 @@ class SearchActivity : AppCompatActivity() {
         .build()
     private val itunesService = retrofit.create(Rest::class.java)
     private val trackList = ArrayList<Track>()
-    private val trackAdapter = TrackAdapter(trackList)
-
+    private val trackAdapter = TracksAdapter { clickOnTrack(it) }
+    private val historyTrackAdapter = TracksAdapter { clickOnTrack(it) }
+    private lateinit var searchHistory: History
+    private lateinit var clearHistoryButton: Button
+    private lateinit var titleHistory: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        searchHistory = History(getSharedPreferences("HISTORY", MODE_PRIVATE))
         setContentView(R.layout.activity_search)
-
         recyclerViewTrack = findViewById(R.id.list)
         recyclerViewTrack.layoutManager = LinearLayoutManager(this)
         recyclerViewTrack.adapter = trackAdapter
-
         savedValue = savedInstanceState?.getString(EDIT_TEXT_VIEW_KEY)
-
         val backImage = findViewById<Button>(R.id.back)
         backImage.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
@@ -56,10 +57,16 @@ class SearchActivity : AppCompatActivity() {
         refreshButt.setOnClickListener {
             searchTrackList()
         }
+        clearHistoryButton = findViewById(R.id.clear_history_button)
+        clearHistoryButton.setOnClickListener {
+            searchHistory.clearList()
+            showState(StateType.SEARCH_RESULT)
+            recyclerViewTrack.visibility = View.GONE
+        }
+        titleHistory = findViewById(R.id.history_title)
         errorIc = findViewById(R.id.error_search)
         errorText = findViewById(R.id.error_connectivity)
         error = findViewById(R.id.error)
-
         searchEditText = findViewById(R.id.searchEditText)
         searchEditText.setText(savedValue)
         val recyclerView: RecyclerView = findViewById(R.id.list)
@@ -72,9 +79,16 @@ class SearchActivity : AppCompatActivity() {
             clearButton.visibility = View.GONE
             errorIc.visibility=View.GONE
             errorText.visibility=View.GONE
+            if (searchHistory.getList().isNotEmpty()){
+                showState(StateType.HISTORY_LIST)
+            }
+            else recyclerViewTrack.visibility = View.GONE
 
             val inputMethodManager = getSystemService(InputMethodManager::class.java)
             inputMethodManager.hideSoftInputFromWindow(searchEditText.windowToken, 0)
+        }
+        searchEditText.setOnFocusChangeListener { view, hasFocus ->
+            if (searchHistory.getList().isNotEmpty() && hasFocus) showState(StateType.HISTORY_LIST)
         }
         val textWatcherEditText = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -82,15 +96,29 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 savedValue = s.toString()
                 clearButton.isVisible = isClearButtonVisible(s)
+                if (searchEditText.hasFocus()
+                    && s.isNullOrEmpty()
+                    && searchHistory.getList().isNotEmpty()
+                ) showState(StateType.HISTORY_LIST)
+                else {
+                    showState(StateType.SEARCH_RESULT)
+                    recyclerViewTrack.visibility = View.GONE
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
+                if (searchEditText.hasFocus() && searchHistory.getList().isNotEmpty()) showState(
+                    StateType.HISTORY_LIST
+                )
+                else showState(StateType.SEARCH_RESULT)
             }
         }
+        searchEditText.addTextChangedListener(textWatcherEditText)
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 try {
                     searchTrackList()
+                    Log.d("TrackTimeDebug", "Track Time: ${trackList}")
                 } catch (e: Exception) {
                     Log.e("SearchError", "Error occurred in searchTrackList: ${e.message}", e) // у меня не работал поиск и я дебажил проблемы. Могу ли я оставлять это в пул реквесте как есть или надо будет потом чистить код? Мне кажется ловить эксепшен тут хорошая идея
                 }
@@ -98,15 +126,43 @@ class SearchActivity : AppCompatActivity() {
             }
             false
         }
-
-        searchEditText.addTextChangedListener(textWatcherEditText)
     }
 
+    private fun clickOnTrack(track: Track) {
+
+        searchHistory.addTrack(track)
+
+    }
+    private val searchWatcher = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            val clearButton = findViewById<ImageView>(R.id.clear)
+            clearButton.isVisible = isClearButtonVisible(s)
+            savedValue = s.toString()
+            if (searchEditText.hasFocus()
+                && s.isNullOrEmpty()
+                && searchHistory.getList().isNotEmpty()
+            ) showState(StateType.HISTORY_LIST)
+            else showState(StateType.SEARCH_RESULT)
+        }
+        override fun afterTextChanged(s: Editable?) {
+            if (searchEditText.hasFocus() && searchHistory.getList().isNotEmpty()) showState(
+                StateType.HISTORY_LIST
+            )
+            else showState(StateType.SEARCH_RESULT)
+        }
+    }
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString(EDIT_TEXT_VIEW_KEY, savedValue)
         super.onSaveInstanceState(outState)
-    }
+        recyclerViewTrack.layoutManager = LinearLayoutManager(this)
+        recyclerViewTrack.adapter = trackAdapter
+        searchEditText = findViewById(R.id.searchEditText)
+        searchEditText.addTextChangedListener(searchWatcher)
 
+        searchEditText.requestFocus()
+    }
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         savedValue = savedInstanceState.getString(EDIT_TEXT_VIEW_KEY)
         searchEditText.setText(savedValue)
@@ -147,22 +203,42 @@ class SearchActivity : AppCompatActivity() {
                 recyclerViewTrack.visibility = View.GONE
                 error.visibility = View.VISIBLE
                 refreshButt.visibility = View.VISIBLE
+
                 errorIc.setImageResource(R.drawable.no_internet)
                 errorText.setText(R.string.connectivity_issue)
+                titleHistory.visibility = View.GONE
+                clearHistoryButton.visibility = View.GONE
             }
+
             StateType.NOT_FOUND -> {
                 recyclerViewTrack.visibility = View.GONE
                 error.visibility = View.VISIBLE
                 refreshButt.visibility = View.GONE
-                errorIc.visibility=View.VISIBLE
-                errorText.visibility=View.VISIBLE
                 errorIc.setImageResource(R.drawable.sad_face)
                 errorText.setText(R.string.not_found)
+                titleHistory.visibility = View.GONE
+                clearHistoryButton.visibility = View.GONE
+
             }
+
             StateType.SEARCH_RESULT -> {
+                trackAdapter.track = trackList
+                recyclerViewTrack.adapter = trackAdapter
                 recyclerViewTrack.visibility = View.VISIBLE
                 error.visibility = View.GONE
                 refreshButt.visibility = View.GONE
+                titleHistory.visibility = View.GONE
+                clearHistoryButton.visibility = View.GONE
+            }
+
+            StateType.HISTORY_LIST -> {
+                historyTrackAdapter.track = searchHistory.getList()
+                recyclerViewTrack.adapter = historyTrackAdapter
+                recyclerViewTrack.visibility = View.VISIBLE
+                error.visibility = View.GONE
+                refreshButt.visibility = View.GONE
+                titleHistory.visibility = View.VISIBLE
+                clearHistoryButton.visibility = View.VISIBLE
             }
         }
     }

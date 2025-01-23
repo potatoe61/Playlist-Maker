@@ -6,13 +6,17 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.ImageSwitcher
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
+    private lateinit var themeSwitcher: SwitchMaterial
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-
-
+        val sharedPreferences = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE)
+        themeSwitcher = findViewById(R.id.themeSwitch)
+        themeSwitcher.isChecked = sharedPreferences.getBoolean(THEME, false)
         val shareLink = findViewById<FrameLayout>(R.id.share)
         shareLink.setOnClickListener {
             val sendIntent: Intent = Intent().apply {
@@ -46,6 +50,13 @@ class SettingsActivity : AppCompatActivity() {
         val backImage = findViewById<Button>(R.id.back)
         backImage.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
+        }
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+            (applicationContext as App).switchTheme(checked)
+
+            sharedPreferences.edit()
+                .putBoolean(THEME, checked)
+                .apply()
         }
     }
 }

@@ -59,6 +59,7 @@
         </LinearLayout>
     </LinearLayout>
     <ImageView
+        android:id="@+id/track_open"
         android:textColor="@color/black"
         android:textSize="11sp"
         android:layout_width="wrap_content"
