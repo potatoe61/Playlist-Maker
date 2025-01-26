@@ -6,13 +6,11 @@ import com.google.gson.reflect.TypeToken
 
 class History(val sharedPreferences: SharedPreferences) {
 
-    companion object {
-        const val HISTORY = "HISTORY"
-    }
+
     private fun saveList(historyTracks: ArrayList<Track>) {
-        val i = Gson().toJson(historyTracks)
+        val saveList = Gson().toJson(historyTracks)
         sharedPreferences.edit()
-            .putString(HISTORY, i)
+            .putString(HISTORY, saveList)
             .apply()
     }
     fun addTrack(track: Track) {
@@ -23,14 +21,17 @@ class History(val sharedPreferences: SharedPreferences) {
         saveList(history)
     }
     fun getList(): ArrayList<Track> {
-        val JSON = sharedPreferences.getString(HISTORY, "")
-        return if (JSON.isNullOrBlank()) {
+        val json = sharedPreferences.getString(HISTORY, "")
+        return if (json.isNullOrBlank()) {
             arrayListOf()
         } else {
-            Gson().fromJson(JSON, object : TypeToken<ArrayList<Track>>() {}.type)
+            Gson().fromJson(json, object : TypeToken<ArrayList<Track>>() {}.type)
         }
     }
     fun clearList() = sharedPreferences.edit()
         .remove(HISTORY)
         .apply()
+    companion object {
+        const val HISTORY = "history"
+    }
 }

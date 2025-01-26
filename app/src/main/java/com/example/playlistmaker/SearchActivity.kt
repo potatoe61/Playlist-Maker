@@ -19,9 +19,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import android.util.Log
 
 class SearchActivity : AppCompatActivity() {
-    private enum class StateType {
-        CONNECTION_ERROR, NOT_FOUND, SEARCH_RESULT, HISTORY_LIST,
-    }
     private lateinit var searchEditText: EditText
     private lateinit var recyclerViewTrack: RecyclerView
     private lateinit var refreshButt: Button
@@ -81,9 +78,9 @@ class SearchActivity : AppCompatActivity() {
             errorText.visibility=View.GONE
             if (searchHistory.getList().isNotEmpty()){
                 showState(StateType.HISTORY_LIST)
+            } else {
+                recyclerViewTrack.visibility = View.GONE
             }
-            else recyclerViewTrack.visibility = View.GONE
-
             val inputMethodManager = getSystemService(InputMethodManager::class.java)
             inputMethodManager.hideSoftInputFromWindow(searchEditText.windowToken, 0)
         }
@@ -99,18 +96,20 @@ class SearchActivity : AppCompatActivity() {
                 if (searchEditText.hasFocus()
                     && s.isNullOrEmpty()
                     && searchHistory.getList().isNotEmpty()
-                ) showState(StateType.HISTORY_LIST)
-                else {
+                ) {
+                    showState(StateType.HISTORY_LIST)
+                } else {
                     showState(StateType.SEARCH_RESULT)
                     recyclerViewTrack.visibility = View.GONE
                 }
             }
 
             override fun afterTextChanged(s: Editable?) {
-                if (searchEditText.hasFocus() && searchHistory.getList().isNotEmpty()) showState(
-                    StateType.HISTORY_LIST
-                )
-                else showState(StateType.SEARCH_RESULT)
+                if (searchEditText.hasFocus() && searchHistory.getList().isNotEmpty()) {
+                    showState(StateType.HISTORY_LIST)
+                } else {
+                    showState(StateType.SEARCH_RESULT)
+                }
             }
         }
         searchEditText.addTextChangedListener(textWatcherEditText)
@@ -143,14 +142,18 @@ class SearchActivity : AppCompatActivity() {
             if (searchEditText.hasFocus()
                 && s.isNullOrEmpty()
                 && searchHistory.getList().isNotEmpty()
-            ) showState(StateType.HISTORY_LIST)
-            else showState(StateType.SEARCH_RESULT)
+            ) {
+                showState(StateType.HISTORY_LIST)
+            } else {
+                showState(StateType.SEARCH_RESULT)
+            }
         }
         override fun afterTextChanged(s: Editable?) {
-            if (searchEditText.hasFocus() && searchHistory.getList().isNotEmpty()) showState(
-                StateType.HISTORY_LIST
-            )
-            else showState(StateType.SEARCH_RESULT)
+            if (searchEditText.hasFocus() && searchHistory.getList().isNotEmpty()) {
+                showState(StateType.HISTORY_LIST)
+            } else {
+                showState(StateType.SEARCH_RESULT)
+            }
         }
     }
     override fun onSaveInstanceState(outState: Bundle) {

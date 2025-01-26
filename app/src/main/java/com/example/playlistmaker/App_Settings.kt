@@ -3,12 +3,10 @@ package com.example.playlistmaker
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 
-const val SHARED_PREFERENCES = "shared_preferences"
 const val THEME = "theme"
+const val SHARED_PREFERENCES = "shared_preferences"
 
 class App: Application() {
-
-    var dark = false
 
     override fun onCreate() {
         super.onCreate()
@@ -19,7 +17,6 @@ class App: Application() {
     }
 
     fun switchTheme(darkThemeEnabled: Boolean) {
-        dark = darkThemeEnabled
         AppCompatDelegate.setDefaultNightMode(
             if (darkThemeEnabled) {
                 AppCompatDelegate.MODE_NIGHT_YES
