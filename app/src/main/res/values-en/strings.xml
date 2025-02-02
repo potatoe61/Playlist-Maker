@@ -18,4 +18,9 @@
     <string name="connectivity_issue">No internet connection\n\nLoading failed. Check your internet settings</string>
     <string name="refresh">Refresh</string>
     <string name="not_found">Nothing was found</string>
+    <string name="duration">Duration</string>
+    <string name="collection_name">Album</string>
+    <string name="release_date">Year</string>
+    <string name="genre_name">Genre</string>
+    <string name="country">Country</string>
 </resources>

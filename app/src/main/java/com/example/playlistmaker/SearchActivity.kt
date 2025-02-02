@@ -17,6 +17,8 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import android.util.Log
+import android.content.Intent
+import com.google.gson.Gson
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var searchEditText: EditText
@@ -128,9 +130,11 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun clickOnTrack(track: Track) {
-
         searchHistory.addTrack(track)
-
+        val playerIntent = Intent(this, PlayerActivity::class.java)
+        playerIntent.putExtra(TRACK, Gson().toJson(track))
+        showState(StateType.SEARCH_RESULT)
+        startActivity(playerIntent)
     }
     private val searchWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -174,6 +178,7 @@ class SearchActivity : AppCompatActivity() {
     private fun isClearButtonVisible(s: CharSequence?): Boolean = !s.isNullOrEmpty()
     companion object {
         private const val EDIT_TEXT_VIEW_KEY = "EDIT_TEXT_VIEW_KEY"
+        const val TRACK = "TRACK"
     }
     private fun searchTrackList() {
         if (searchEditText.text.isNotEmpty()) {

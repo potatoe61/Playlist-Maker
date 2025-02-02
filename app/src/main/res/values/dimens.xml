@@ -6,4 +6,5 @@
     <dimen name="menu">61dp</dimen>
     <dimen name="text">16sp</dimen>
     <dimen name="margin_end">18dp</dimen>
+    <dimen name="art_work_radius">8dp</dimen>
 </resources>
