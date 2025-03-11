@@ -23,4 +23,5 @@
     <string name="release_date">Year</string>
     <string name="genre_name">Genre</string>
     <string name="country">Country</string>
+    <string name="default_play_time">00:00</string>
 </resources>
