@@ -17,4 +17,9 @@
     <string name="connectivity_issue">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
     <string name="refresh">Обновить</string>
     <string name="not_found">Ничего не нашлось</string>
+    <string name="duration">Длительность</string>
+    <string name="collection_name">Альбом</string>
+    <string name="release_date">Год</string>
+    <string name="genre_name">Жанр</string>
+    <string name="country">Страна</string>
 </resources>
