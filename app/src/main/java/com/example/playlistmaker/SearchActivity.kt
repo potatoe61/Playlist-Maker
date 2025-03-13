@@ -19,6 +19,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 import android.util.Log
 import android.content.Intent
 import com.google.gson.Gson
+import android.os.Handler
+import android.os.Looper
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var searchEditText: EditText
@@ -40,10 +42,15 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchHistory: History
     private lateinit var clearHistoryButton: Button
     private lateinit var titleHistory: TextView
+    private var isClickAllowed = true
+    private val handler = Handler(Looper.getMainLooper())
+    private val searchRunnable = Runnable { searchTrackList() }
+    private lateinit var progressBar: ProgressBar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         searchHistory = History(getSharedPreferences("HISTORY", MODE_PRIVATE))
         setContentView(R.layout.activity_search)
+        progressBar = findViewById(R.id.progressBar)
         recyclerViewTrack = findViewById(R.id.list)
         recyclerViewTrack.layoutManager = LinearLayoutManager(this)
         recyclerViewTrack.adapter = trackAdapter
@@ -101,18 +108,11 @@ class SearchActivity : AppCompatActivity() {
                 ) {
                     showState(StateType.HISTORY_LIST)
                 } else {
-                    showState(StateType.SEARCH_RESULT)
-                    recyclerViewTrack.visibility = View.GONE
+                    searchDebounce()
                 }
             }
 
-            override fun afterTextChanged(s: Editable?) {
-                if (searchEditText.hasFocus() && searchHistory.getList().isNotEmpty()) {
-                    showState(StateType.HISTORY_LIST)
-                } else {
-                    showState(StateType.SEARCH_RESULT)
-                }
-            }
+            override fun afterTextChanged(s: Editable?) {}
         }
         searchEditText.addTextChangedListener(textWatcherEditText)
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
@@ -130,11 +130,24 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun clickOnTrack(track: Track) {
-        searchHistory.addTrack(track)
-        val playerIntent = Intent(this, PlayerActivity::class.java)
-        playerIntent.putExtra(TRACK, Gson().toJson(track))
-        showState(StateType.SEARCH_RESULT)
-        startActivity(playerIntent)
+        if (clickDebounce()) {
+            searchHistory.addTrack(track)
+            val playerIntent = Intent(this, PlayerActivity::class.java)
+            playerIntent.putExtra(TRACK, Gson().toJson(track))
+            startActivity(playerIntent)
+        }
+    }
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_ITEM_DELAY)
+        }
+        return current
+    }
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
     private val searchWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -179,9 +192,12 @@ class SearchActivity : AppCompatActivity() {
     companion object {
         private const val EDIT_TEXT_VIEW_KEY = "EDIT_TEXT_VIEW_KEY"
         const val TRACK = "TRACK"
+        private const val CLICK_ITEM_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
     private fun searchTrackList() {
         if (searchEditText.text.isNotEmpty()) {
+            showState(StateType.SEARCH_PROGRESS)
             itunesService.search(searchEditText.text.toString())
                 .enqueue(object : Callback<TrackResponse> {
                     override fun onResponse(
@@ -211,7 +227,7 @@ class SearchActivity : AppCompatActivity() {
                 recyclerViewTrack.visibility = View.GONE
                 error.visibility = View.VISIBLE
                 refreshButt.visibility = View.VISIBLE
-
+                progressBar.visibility = View.GONE
                 errorIc.setImageResource(R.drawable.no_internet)
                 errorText.setText(R.string.connectivity_issue)
                 titleHistory.visibility = View.GONE
@@ -226,7 +242,7 @@ class SearchActivity : AppCompatActivity() {
                 errorText.setText(R.string.not_found)
                 titleHistory.visibility = View.GONE
                 clearHistoryButton.visibility = View.GONE
-
+                progressBar.visibility = View.GONE
             }
 
             StateType.SEARCH_RESULT -> {
@@ -237,6 +253,7 @@ class SearchActivity : AppCompatActivity() {
                 refreshButt.visibility = View.GONE
                 titleHistory.visibility = View.GONE
                 clearHistoryButton.visibility = View.GONE
+                progressBar.visibility = View.GONE
             }
 
             StateType.HISTORY_LIST -> {
@@ -247,6 +264,15 @@ class SearchActivity : AppCompatActivity() {
                 refreshButt.visibility = View.GONE
                 titleHistory.visibility = View.VISIBLE
                 clearHistoryButton.visibility = View.VISIBLE
+                progressBar.visibility = View.GONE
+            }
+            StateType.SEARCH_PROGRESS -> {
+                recyclerViewTrack.visibility = View.GONE
+                error.visibility = View.GONE
+                refreshButt.visibility = View.GONE
+                titleHistory.visibility = View.GONE
+                clearHistoryButton.visibility = View.GONE
+                progressBar.visibility = View.VISIBLE
             }
         }
     }

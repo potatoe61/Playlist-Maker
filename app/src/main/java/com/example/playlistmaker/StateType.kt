@@ -5,4 +5,5 @@ enum class StateType {
     NOT_FOUND,
     SEARCH_RESULT,
     HISTORY_LIST,
+    SEARCH_PROGRESS
 }
