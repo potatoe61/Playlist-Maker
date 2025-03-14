@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.settings
 
 import android.content.Intent
 import android.net.Uri
@@ -6,7 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.FrameLayout
-import android.widget.ImageSwitcher
+import com.example.playlistmaker.R
+import com.example.playlistmaker.presentation.app.App
+import com.example.playlistmaker.presentation.app.SHARED_PREFERENCES
+import com.example.playlistmaker.presentation.app.THEME
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
