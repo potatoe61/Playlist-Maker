@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.search
 
 import android.os.Bundle
 import android.text.Editable
@@ -21,6 +21,14 @@ import android.content.Intent
 import com.google.gson.Gson
 import android.os.Handler
 import android.os.Looper
+import com.example.playlistmaker.History
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.StateType
+import com.example.playlistmaker.data.rest.Rest
+import com.example.playlistmaker.data.dr.TrackResponse
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.presentation.search.TracksAdapter
+import com.example.playlistmaker.ui.player.PlayerActivity
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var searchEditText: EditText
@@ -180,7 +188,6 @@ class SearchActivity : AppCompatActivity() {
         recyclerViewTrack.adapter = trackAdapter
         searchEditText = findViewById(R.id.searchEditText)
         searchEditText.addTextChangedListener(searchWatcher)
-
         searchEditText.requestFocus()
     }
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {

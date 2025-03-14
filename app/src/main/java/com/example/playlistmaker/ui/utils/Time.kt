@@ -1,7 +1,4 @@
-package com.example.playlistmaker
-
-import java.text.SimpleDateFormat
-import java.util.*
+package com.example.playlistmaker.ui.utils
 
 object Time {
     fun millisToStrFormat(millis: Int): String {

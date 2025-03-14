@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.search
 import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,6 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.R
+import com.example.playlistmaker.ui.utils.Time
+import com.example.playlistmaker.domain.models.Track
 
 class TrackViewHolder(parentView: ViewGroup) : RecyclerView.ViewHolder(
         LayoutInflater.from(parentView.context).inflate(R.layout.activity_tracks, parentView, false)
