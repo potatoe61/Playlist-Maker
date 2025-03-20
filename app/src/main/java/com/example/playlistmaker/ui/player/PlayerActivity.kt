@@ -1,20 +1,23 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.player
 
-import androidx.appcompat.app.AppCompatActivity
+import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.ui.search.SearchActivity
+import com.example.playlistmaker.ui.utils.Time
 import com.google.gson.Gson
-import com.example.playlistmaker.SearchActivity.Companion.TRACK
 import java.text.SimpleDateFormat
-import java.util.*
-import android.media.MediaPlayer
-import android.os.Handler
-import android.os.Looper
-import com.example.playlistmaker.Time.millisToStrFormat
+import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
     private lateinit var playBtn: ImageView
@@ -37,12 +40,12 @@ class PlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
 
-        findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar_id).setNavigationOnClickListener {
+        findViewById<Toolbar>(R.id.toolbar_id).setNavigationOnClickListener {
             finish()
         }
 
         mainThreadHandler = Handler(Looper.getMainLooper())
-        track = Gson().fromJson(intent.getStringExtra(TRACK), Track::class.java)
+        track = Gson().fromJson(intent.getStringExtra(SearchActivity.Companion.TRACK), Track::class.java)
         trackName = findViewById(R.id.trackName)
         trackName.text = track.trackName
 
@@ -50,7 +53,7 @@ class PlayerActivity : AppCompatActivity() {
         artistName.text = track.artistName
 
         trackTime = findViewById(R.id.trackTime)
-        trackTime.text = millisToStrFormat(track.trackTimeMillis)
+        trackTime.text = Time.millisToStrFormat(track.trackTimeMillis)
 
         artwork = findViewById(R.id.artwork)
         Glide.with(artwork)
@@ -69,8 +72,7 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         releaseDate = findViewById(R.id.releaseDate)
-        val formatDate = SimpleDateFormat("yyyy", Locale.getDefault()).parse(track.releaseDate)
-        val data = SimpleDateFormat("yyyy", Locale.getDefault()).format(formatDate)
+        val data = SimpleDateFormat("yyyy", Locale.getDefault()).format(track.releaseDate)
         releaseDate.text =  data
 
         primaryGenreName = findViewById(R.id.primaryGenre)
@@ -116,9 +118,8 @@ class PlayerActivity : AppCompatActivity() {
         mainThreadHandler?.postDelayed(
             object : Runnable {
                 override fun run() {
-                    // Обновляем время
                     playTimeText.text = if (mediaPlayer.currentPosition < REFRESH_PLAY_TIME) {
-                        millisToStrFormat(mediaPlayer.currentPosition)
+                        Time.millisToStrFormat(mediaPlayer.currentPosition)
                     } else {
                         getText(R.string.default_play_time)
                     }

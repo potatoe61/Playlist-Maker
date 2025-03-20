@@ -11,4 +11,6 @@
     <color name="track_lower_part">#AEAFB4</color>
     <color name="cross">#AEAFB4</color>
     <color name="search_text">#000000</color>
+    <color name="custom_thumb_color">#AEAFB4</color>
+    <color name="custom_track_color">#E6E8EB</color>
 </resources>

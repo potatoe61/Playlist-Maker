@@ -68,85 +68,10 @@
             android:src="@drawable/clear"
             app:tint="@color/cross"
             android:visibility="gone"/>
+    </FrameLayout>
 
 
-</FrameLayout>
-                <TextView
-                    android:id="@+id/history_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:padding="20dp"
-                    android:text="Вы искали"
-                    android:visibility="gone"
-                    android:fontWeight="500"
-                    android:fontFamily="@font/ys_display_medium"
-                    android:textColor="@color/text"
-                    android:textSize="19sp"
-                />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/clear_history_button"
-                    android:backgroundTint="@color/text"
-                    android:textColor="@color/white"
-                    android:minHeight="36dp"
-                    android:paddingHorizontal="14dp"
-                    android:paddingVertical="10dp"
-                    android:layout_margin="22dp"
-                    android:background="@drawable/rounded_button_background"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Очистить историю"
-                    android:textAllCaps="false"
-                    android:textSize="14sp"
-                    android:visibility="gone"/>
-
-    <LinearLayout
-        android:id="@+id/error"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/error_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/sad_face" />
-
-        <TextView
-            android:id="@+id/error_connectivity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="22dp"
-            android:textSize="19sp"
-            android:textColor="@color/text"
-            android:fontFamily="@font/ys_display_medium"
-            android:fontWeight="400"
-            android:text="@string/connectivity_issue" />
-
-        <Button
-            android:id="@+id/refresh"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textColor="@color/white"
-            android:backgroundTint="?attr/colorOnSecondary"
-            android:fontFamily="@font/ys_display_medium"
-            android:fontWeight="500"
-            android:textAllCaps="false"
-            app:cornerRadius="54dp"
-            android:text="@string/refresh"
-            android:visibility="gone" />
-    </LinearLayout>
     <ProgressBar android:id="@+id/progressBar"
         android:layout_width="44dp"
         android:layout_height="44dp"
@@ -154,4 +79,88 @@
         android:layout_gravity="center_horizontal"
         android:indeterminateTint="#3772E7"
         android:visibility="gone"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tracks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/iv_Error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/sad_face"
+        android:visibility="gone"/>
+    <TextView
+        android:id="@+id/tv_Error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="22dp"
+        android:textSize="19sp"
+        android:layout_gravity="center"
+        android:textColor="@color/text"
+        android:fontFamily="@font/ys_display_medium"
+        android:fontWeight="400"
+        android:text="@string/connectivity_issue"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="@color/white"
+        android:backgroundTint="?attr/colorOnSecondary"
+        android:fontFamily="@font/ys_display_medium"
+        android:fontWeight="500"
+        android:textAllCaps="false"
+        android:layout_gravity="center"
+        app:cornerRadius="54dp"
+        android:text="@string/refresh"
+        android:visibility="gone" />
+
+
+    <LinearLayout
+    android:id="@+id/HistoryLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:visibility="gone">
+        <TextView
+            android:id="@+id/history_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="20dp"
+            android:text="@string/SearchMessage"
+            android:fontWeight="500"
+            android:fontFamily="@font/ys_display_medium"
+            android:textColor="@color/text"
+            android:textSize="19sp"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/clear_history_button"
+            android:backgroundTint="@color/text"
+            android:textColor="@color/white"
+            android:minHeight="36dp"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="10dp"
+            android:layout_margin="22dp"
+            android:background="@drawable/rounded_button_background"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/ClearHistory"
+            android:textAllCaps="false"
+            android:textSize="14sp"
+            />
+    </LinearLayout>
 </LinearLayout>
