@@ -41,6 +41,7 @@
 
         <EditText
             android:id="@+id/searchEditText"
+            android:textCursorDrawable="@drawable/cursor_color"
             android:layout_width="match_parent"
             android:layout_height="36dp"
             android:layout_marginTop="8dp"
