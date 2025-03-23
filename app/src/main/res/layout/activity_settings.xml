@@ -36,12 +36,15 @@
             android:text="@string/dark_mode" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
-            android:checked="false"
             android:id="@+id/themeSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end"
-            android:layout_marginEnd="7dp"/>
+            android:layout_marginEnd="6dp"
+            android:textColor="@color/black"
+            android:checked="false"
+            app:thumbTint="@color/custom_thumb_color"
+            app:trackTint="@color/custom_track_color"/>
     </FrameLayout>
 
     <FrameLayout
