@@ -1,28 +1,38 @@
 package com.example.playlistmaker.player.data.repositories
 
 import com.example.playlistmaker.player.domain.repositories.MediaPlayerRepositories
-import android.media.MediaPlayer
+import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.player.presentation.state.PlayerState2
+
 
 class MediaPlayerRepositoriesImpl(): MediaPlayerRepositories {
 
-    private val mediaPlayer = MediaPlayer()
+    private val mediaPlayer = Creator.provideMediaPlayer()
+    private var playerState = PlayerState2.STATE_DEFAULT
+
     override fun prepare(trackUrl: String, onPrepared: () -> Unit, onCompletion: () -> Unit) {
         mediaPlayer.setDataSource(trackUrl)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
+            playerState = PlayerState2.STATE_PREPARED
             onPrepared()
         }
         mediaPlayer.setOnCompletionListener {
+            playerState = PlayerState2.STATE_PREPARED
             onCompletion()
         }
     }
 
-    override fun startPlayer() {
+    override fun startPlayer(onStarted: () -> Unit) {
         mediaPlayer.start()
+        playerState = PlayerState2.STATE_PLAYING
+        onStarted()
     }
 
-    override fun pausePlayer() {
+    override fun pausePlayer(onPaused: () -> Unit) {
         mediaPlayer.pause()
+        playerState = PlayerState2.STATE_PAUSED
+        onPaused()
     }
 
     override fun resetPlayer() {
@@ -38,8 +48,20 @@ class MediaPlayerRepositoriesImpl(): MediaPlayerRepositories {
     }
 
     override fun getCurrentPosition(): Int {
-        return mediaPlayer.getCurrentPosition()
+        return mediaPlayer.currentPosition
     }
 
+    override fun playbackControl(onStarted: () -> Unit, onPaused: () -> Unit) {
+        when (playerState) {
+            PlayerState2.STATE_PLAYING -> {
+                pausePlayer(onPaused)
+            }
 
+            PlayerState2.STATE_PREPARED, PlayerState2.STATE_PAUSED -> {
+                startPlayer(onStarted)
+            }
+
+            else -> {}
+        }
+    }
 }

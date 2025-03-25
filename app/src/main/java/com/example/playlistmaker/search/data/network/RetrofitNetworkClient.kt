@@ -1,25 +1,15 @@
-package com.practicum.playlistmaker.search.data.network
+package com.example.playlistmaker.search.data.network
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.search.data.dto.Response
 import com.example.playlistmaker.search.data.dto.TrackSearchRequest
-import com.example.playlistmaker.search.data.network.NetworkClient
-import com.example.playlistmaker.search.data.network.SearchTrackApi
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class RetrofitNetworkClient(private val context: Context) : NetworkClient {
 
-    private val iTunesBaseUrl = "https://itunes.apple.com"
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(iTunesBaseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val iTunesService = retrofit.create(SearchTrackApi::class.java)
+    private val iTunesService = Creator.provideiTunesService()
 
     override fun doRequest(dto: Any): Response {
 

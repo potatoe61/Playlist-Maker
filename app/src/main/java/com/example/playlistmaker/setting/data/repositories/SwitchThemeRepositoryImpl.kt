@@ -1,10 +1,12 @@
 package com.example.playlistmaker.setting.data.repositories
 
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.setting.domain.repositories.SwitchThemeRepository
 
-class SwitchThemeRepositoryImpl(): SwitchThemeRepository {
+class SwitchThemeRepositoryImpl():
+    SwitchThemeRepository {
     companion object {
         private const val THEME = "THEME"
     }

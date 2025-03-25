@@ -3,6 +3,7 @@ package com.example.playlistmaker.creator
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import com.example.playlistmaker.search.domain.api.TrackInteractor
 import com.example.playlistmaker.search.domain.repositories.TrackRepository
@@ -14,9 +15,10 @@ import com.example.playlistmaker.player.domain.interactors.MediaPlayerInteractor
 import com.example.playlistmaker.player.data.repositories.MediaPlayerRepositoriesImpl
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.player.domain.repositories.MediaPlayerRepositories
+import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
+import com.example.playlistmaker.search.data.network.SearchTrackApi
 import com.example.playlistmaker.search.data.repositories.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.search.data.repositories.TrackRepositoryImpl
-import com.example.playlistmaker.search.domain.repositories.SearchHistoryRepository
 import com.example.playlistmaker.setting.domain.repositories.ExternalNavigatorRepository
 import com.example.playlistmaker.setting.data.repositories.SharingRepositoryImpl
 import com.example.playlistmaker.setting.data.repositories.ExternalNavigatorRepositoryImpl
@@ -24,7 +26,8 @@ import com.example.playlistmaker.setting.domain.api.SharingInteractor
 import com.example.playlistmaker.setting.domain.interactors.SharingInteractorImpl
 import com.example.playlistmaker.setting.domain.repositories.SharingRepository
 import com.example.playlistmaker.setting.domain.repositories.SwitchThemeRepository
-import com.practicum.playlistmaker.search.data.network.RetrofitNetworkClient
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 object Creator {
     private lateinit var application: Application
@@ -79,6 +82,16 @@ object Creator {
     fun MediaPlayerRepositories():MediaPlayerRepositories{
         return MediaPlayerRepositoriesImpl()
     }
+    fun provideMediaPlayer():MediaPlayer {
+        return MediaPlayer()
+    }
+    fun provideiTunesService(): SearchTrackApi{
+        val iTunesBaseUrl = "https://itunes.apple.com"
 
-
+        val retrofit = Retrofit.Builder()
+            .baseUrl(iTunesBaseUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        return retrofit.create(SearchTrackApi::class.java)
+    }
 }

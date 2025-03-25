@@ -22,12 +22,11 @@ class SettingsActivity : AppCompatActivity() {
         val backButton = findViewById<Button>(R.id.back)
         val switchTheme = findViewById<SwitchMaterial>(R.id.themeSwitch)
 
-
-        switchTheme.isChecked = viewModelSetting.getTheme()
+        viewModelSetting.getThemeAppLiveData().observe(this) { isDarkThemeEnabled ->
+            switchTheme.isChecked = isDarkThemeEnabled
+        }
         switchTheme.setOnCheckedChangeListener { switcher, checked ->
-            viewModelSetting.editTheme(checked)
             viewModelSetting.switchTheme(checked)
-
         }
 
         backButton.setOnClickListener{

@@ -12,3 +12,9 @@ data class PlayerState (
     val artworkUrl100:String= "",
     val currentPosition : String= "00:00"
 )
+enum class PlayerState2 {
+    STATE_PLAYING,
+    STATE_PAUSED,
+    STATE_PREPARED,
+    STATE_DEFAULT
+}
