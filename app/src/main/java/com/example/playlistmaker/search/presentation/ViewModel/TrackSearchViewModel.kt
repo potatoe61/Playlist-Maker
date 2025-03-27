@@ -6,6 +6,7 @@ import android.os.Looper
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
@@ -14,18 +15,16 @@ import com.example.playlistmaker.search.domain.api.TrackInteractor
 import com.example.playlistmaker.search.domain.model.SearchScreenState
 import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.search.presentation.utils.SingleEventLiveData
-import com.example.playlistmaker.creator.Creator
 
 class TrackSearchViewModel(
-    application: Application,
-    private val tracksInteractor: TrackInteractor
-) : AndroidViewModel(application) {
+    interactor: TrackInteractor
+) : ViewModel() {
 
     var currentRequestId: Int = 0
     private var currentQuery = ""
 
     private var isClickAllowed = true
-
+    private val tracksInteractor = interactor
     private val searchRunnable = Runnable {
         makeSearch(currentQuery)
     }
@@ -111,15 +110,6 @@ class TrackSearchViewModel(
         private const val SEARCH_DEBOUNCE_DELAY_IN_SECONDS = 2000L
         private const val CLICK_DEBOUNCE_DELAY_IN_SECONDS = 1000L
         private const val MAX_REQUEST_ID = 1000
-
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                TrackSearchViewModel(
-                    this[APPLICATION_KEY] as Application,
-                    Creator.provideTracksInteractor()
-                )
-            }
-        }
     }
 
     override fun onCleared() {

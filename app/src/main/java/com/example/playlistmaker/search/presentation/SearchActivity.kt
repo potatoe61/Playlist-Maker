@@ -17,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.search.presentation.ViewModel.TrackSearchViewModel
 import android.widget.LinearLayout
 import com.example.playlistmaker.player.presentation.PlayerActivity
@@ -25,13 +24,13 @@ import com.example.playlistmaker.search.domain.model.SearchScreenState
 import com.example.playlistmaker.search.domain.model.Track
 import com.google.gson.Gson
 import com.practicum.playlistmaker.search.ui.TrackAdapter
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
     companion object {
         const val TRACK = "TRACK"
         private const val EDIT_TEXT_VIEW_KEY = "EDIT_TEXT_VIEW_KEY"
     }
-    private lateinit var viewModel: TrackSearchViewModel
     private lateinit var arrowBackButton: Button
     private lateinit var queryInput: EditText
     private lateinit var clearButton: ImageView
@@ -49,16 +48,11 @@ class SearchActivity : AppCompatActivity() {
     private val trackList = ArrayList<Track>()
 
     private var savedQuery: String = ""
+    private val viewModel by viewModel< TrackSearchViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-
-        viewModel = ViewModelProvider(
-            this,
-            TrackSearchViewModel.getViewModelFactory()
-        )[TrackSearchViewModel::class.java]
-
         rvForSearchTrack = findViewById(R.id.tracks)
         arrowBackButton = findViewById(R.id.back)
         queryInput = findViewById(R.id.searchEditText)
