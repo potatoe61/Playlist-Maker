@@ -1,0 +1,15 @@
+package com.example.playlistmaker.player.domain.api
+
+interface MediaPlayerInteractor {
+    fun prepare(trackUrl:String,onPrepared:()->Unit,onCompletion:()->Unit)
+    fun startPlayer(onStarted: () -> Unit)
+    fun pausePlayer(onPaused: () -> Unit = {})
+    fun playbackControl(
+        onStarted: () -> Unit,
+        onPaused: () -> Unit
+    )
+    fun resetPlayer()
+    fun releasePlayer()
+    fun  isPlaying(): Boolean
+    fun getCurrentPosition(): String
+}
