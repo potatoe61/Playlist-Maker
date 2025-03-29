@@ -10,14 +10,12 @@ import com.google.gson.Gson
 const val TRACK_HISTORY_KEY = "key_for_history_search"
 const val SEARCH_HISTORY_PREFERENCES = "search_history"
 
-class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferences) :
+class SearchHistoryRepositoryImpl(private val gson: Gson, private val sharedPreferences: SharedPreferences) :
     SearchHistoryRepository {
 
     companion object {
         const val MAX_LIMIT_SONGS = 10
     }
-
-    private val gson = Gson()
 
     override fun saveTrackToHistory(tracks: ArrayList<TrackDto>) {
         sharedPreferences.edit()

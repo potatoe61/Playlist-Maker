@@ -1,6 +1,7 @@
 package com.example.playlistmaker.player.presentation.state
 
 sealed class AudioPlayerState {
-    data class State(val playerState: PlayerState2): AudioPlayerState()
+    object Prepared : AudioPlayerState()
     data class Playing(val currentPosition: String): AudioPlayerState()
+    data class Paused(val lastPosition: String) : AudioPlayerState()
 }

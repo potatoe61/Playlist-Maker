@@ -4,15 +4,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.FrameLayout
-import androidx.activity.viewModels
 import com.example.playlistmaker.R
 import com.example.playlistmaker.setting.presentation.viewModel.SettingViewModel
 import com.google.android.material.switchmaterial.SwitchMaterial
-
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
 
-    private val viewModelSetting by viewModels<SettingViewModel> { SettingViewModel.getViewModelFactory() }
+    private val viewModelSetting by viewModel<SettingViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 

@@ -1,6 +1,7 @@
 package com.example.playlistmaker.player.presentation
 
-import android.media.MediaPlayer
+
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -19,6 +20,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import com.example.playlistmaker.player.presentation.state.AudioPlayerState
 import com.example.playlistmaker.player.presentation.state.PlayerState2
+import org.koin.core.parameter.parametersOf
 
 class PlayerActivity : AppCompatActivity() {
     companion object {
@@ -29,10 +31,14 @@ class PlayerActivity : AppCompatActivity() {
     private val dateFormat by lazy {
         SimpleDateFormat("mm:ss", Locale.getDefault())
     }
-    private lateinit var viewModel: MediaPlayerViewModel
+    private var songUrl: String = ""
+    private val viewModel by viewModel<MediaPlayerViewModel> {
+        parametersOf(songUrl)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_player)
         val backButton = findViewById<Toolbar>(R.id.toolbar_id)
         val intent = getIntent()
@@ -47,7 +53,7 @@ class PlayerActivity : AppCompatActivity() {
         val tvAlbum = findViewById<TextView>(R.id.collectionName)
         val tvGenre = findViewById<TextView>(R.id.primaryGenre)
         val ivTitle = findViewById<ImageView>(R.id.artwork)
-
+        songUrl = historyTrackClick.previewUrl
         tvTrackName.text = historyTrackClick.trackName
         tvArtistName.text = historyTrackClick.artistName
         tvCountry.text = historyTrackClick.country
@@ -55,11 +61,6 @@ class PlayerActivity : AppCompatActivity() {
         tvAlbum.text = historyTrackClick.collectionName
         tvYears.text = historyTrackClick.releaseDate.substring(0, 4)
         tvDuration?.text = dateFormat.format(historyTrackClick.trackTimeMillis)
-        val url = historyTrackClick.previewUrl
-        viewModel = ViewModelProvider(
-            this,
-            MediaPlayerViewModel.getViewModelFactory(url)
-        )[MediaPlayerViewModel::class.java]
 
         mainThreadHandler = Handler(Looper.getMainLooper())
 
@@ -87,24 +88,20 @@ class PlayerActivity : AppCompatActivity() {
     private fun render(state: AudioPlayerState) {
         val tvTime = findViewById<TextView>(R.id.play_time)
         when (state) {
+            is AudioPlayerState.Prepared -> {
+                playOrPauseButton.isEnabled = true
+                tvTime.text = getString(R.string.default_play_time)
+                playOrPauseButton.setImageResource(R.drawable.play)
+            }
+
             is AudioPlayerState.Playing -> {
                 tvTime.text = state.currentPosition
                 playOrPauseButton.setImageResource(R.drawable.pause)
             }
 
-            is AudioPlayerState.State -> {
-                when (state.playerState) {
-                    PlayerState2.STATE_PREPARED -> {
-                        playOrPauseButton.isEnabled = true
-                        tvTime.text = getString(R.string.default_play_time)
-                        playOrPauseButton.setImageResource(R.drawable.play)
-                    }
-
-                    PlayerState2.STATE_PAUSED -> {
-                        playOrPauseButton.setImageResource(R.drawable.play)
-                    }
-                    else -> {}
-                }
+            is AudioPlayerState.Paused -> {
+                playOrPauseButton.setImageResource(R.drawable.play)
+                tvTime.text = state.lastPosition
             }
         }
     }
