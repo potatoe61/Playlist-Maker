@@ -26,4 +26,9 @@
     <string name="default_play_time">00:00</string>
     <string name="ClearHistory">Clear history</string>
     <string name="SearchMessage">You searched</string>
+    <string name="emptyMediateka">Your library is empty</string>
+    <string name="emptyPlaylist">You have not \n created a playlist yet</string>
+    <string name="createPlayList">New playlist</string>
+    <string name="favorite_tracks">Liked tracks</string>
+    <string name="playlists">Playlists</string>
 </resources>

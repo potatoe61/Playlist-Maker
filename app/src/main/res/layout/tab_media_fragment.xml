@@ -1,0 +1,47 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/createPlayList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="14dp"
+        android:minHeight="36dp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/black"
+        android:text="@string/createPlayList"
+        android:textAllCaps="false"
+        android:layout_gravity="center"
+        android:textSize="14sp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/ys_display_medium"
+        android:background="@drawable/rounded_button_background"
+        />
+
+    <ImageView
+        android:id="@+id/icon_media"
+        android:layout_marginTop="46dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        app:srcCompat="@drawable/sad_face"
+        />
+    <TextView
+        android:id="@+id/media_tab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:text="@string/emptyPlaylist"
+        android:textColor="@color/black"
+        android:textSize="24sp" />
+
+</LinearLayout>
