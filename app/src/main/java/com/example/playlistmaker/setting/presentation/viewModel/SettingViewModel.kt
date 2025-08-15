@@ -14,9 +14,12 @@ class SettingViewModel(private val sharingInteractor: SharingInteractor,
 ): ViewModel() {
 
     private val themeAppLiveData = MutableLiveData<Boolean>()
-    fun getThemeAppLiveData(): LiveData<Boolean> = themeAppLiveData
+
     init {
         themeAppLiveData.value = switchThemeInteractor.getSharedPreferencesThemeValue()
+    }
+    fun getTheme():Boolean{
+        return switchThemeInteractor.getSharedPreferencesThemeValue()
     }
     fun editTheme(checked:Boolean){
         switchThemeInteractor.sharedPreferencesEdit(checked)

@@ -1,29 +1,36 @@
 package com.example.playlistmaker.media.presentation
 
+
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.example.playlistmaker.R
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMediatekaBinding
 
+class MediatekaActivity : Fragment() {
 
-class MediatekaActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMediatekaBinding
     private lateinit var tabMediator: TabLayoutMediator
-    override fun onCreate(savedInstanceState: Bundle?) {
-        binding = ActivityMediatekaBinding.inflate(layoutInflater)
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
-        val backButton = binding.toolbarMedia
 
-        backButton.setOnClickListener{
-            onBackPressedDispatcher.onBackPressed()
-        }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = ActivityMediatekaBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        binding.viewPager.adapter = ViewPagerAdapter(supportFragmentManager, lifecycle)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.viewPager.adapter = ViewPagerAdapter(childFragmentManager, lifecycle)
 
         tabMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            when(position) {
+            when (position) {
                 0 -> tab.text = getString(R.string.favorite_tracks)
                 1 -> tab.text = getString(R.string.playlists)
             }
@@ -31,8 +38,8 @@ class MediatekaActivity : AppCompatActivity() {
         tabMediator.attach()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         tabMediator.detach()
     }
 }

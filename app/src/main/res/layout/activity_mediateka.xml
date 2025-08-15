@@ -16,7 +16,6 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:backgroundTintMode="@color/black"
-        app:navigationIcon="@drawable/vector_reverse"
         app:iconTint="@color/white"
         app:title="Медиатека"
         app:titleTextColor="@color/black"

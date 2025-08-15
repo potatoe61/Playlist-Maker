@@ -1,48 +1,67 @@
 package com.example.playlistmaker.setting.presentation
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.FrameLayout
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.fragment.app.Fragment
 import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import com.example.playlistmaker.setting.presentation.viewModel.SettingViewModel
-import com.google.android.material.switchmaterial.SwitchMaterial
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SettingsActivity : AppCompatActivity() {
+
+class SettingsActivity : Fragment() {
 
     private val viewModelSetting by viewModel<SettingViewModel>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    private var _binding : ActivitySettingsBinding? = null
+    val binding : ActivitySettingsBinding
+        get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = ActivitySettingsBinding.inflate(inflater,container,false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        //val backButton = binding.tvHeader
 
 
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
-        val backButton = findViewById<Button>(R.id.back)
-        val switchTheme = findViewById<SwitchMaterial>(R.id.themeSwitch)
 
-        viewModelSetting.getThemeAppLiveData().observe(this) { isDarkThemeEnabled ->
-            switchTheme.isChecked = isDarkThemeEnabled
-        }
-        switchTheme.setOnCheckedChangeListener { switcher, checked ->
+
+        binding.themeSwitch.isChecked = viewModelSetting.getTheme()
+        binding.themeSwitch.setOnCheckedChangeListener { switcher, checked ->
+            //viewModelSetting.editTheme(checked)
             viewModelSetting.switchTheme(checked)
         }
 
-        backButton.setOnClickListener{
-            onBackPressedDispatcher.onBackPressed()
-        }
 
-        val supportButton = findViewById<FrameLayout>(R.id.support)
-        supportButton.setOnClickListener{
+        //backButton.setNavigationOnClickListener{
+            //parentFragmentManager.popBackStack()
+        //}
+
+        binding.support.setOnClickListener{
             viewModelSetting.supportSend()
         }
-        val agreementButton = findViewById<FrameLayout>(R.id.agreement)
-        agreementButton.setOnClickListener{
+
+        binding.agreement.setOnClickListener{
             viewModelSetting.openTerm()
         }
-        val shareButton = findViewById<FrameLayout>(R.id.share)
-        shareButton.setOnClickListener{
+
+        binding.share.setOnClickListener{
             viewModelSetting.shareApp()
         }
     }
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
+
 }
