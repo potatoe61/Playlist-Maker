@@ -20,7 +20,7 @@ class MediaPlayerViewModel(url: String, private val mediaPlayerInteractor: Media
     }
 
 
-    val mainThreadHandler = Handler(Looper.getMainLooper())
+    var mainThreadHandler = Handler(Looper.getMainLooper())
 
     private val mediaPlayerState = MutableLiveData<AudioPlayerState>()
     fun getPlayerState(): LiveData<AudioPlayerState> = mediaPlayerState
@@ -64,10 +64,6 @@ class MediaPlayerViewModel(url: String, private val mediaPlayerInteractor: Media
 
     fun release() {
         mainThreadHandler.removeCallbacks(trackTimerUpdater())
-        mediaPlayerInteractor.releasePlayer()
-    }
-    override fun onCleared() {
-        super.onCleared()
         mediaPlayerInteractor.releasePlayer()
     }
 }
