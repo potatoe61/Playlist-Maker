@@ -10,7 +10,7 @@ class MediaPlayerRepositoriesImpl(private val mediaPlayer: MediaPlayer): MediaPl
     private var playerState = PlayerState2.STATE_DEFAULT
 
     override fun prepare(trackUrl: String, onPrepared: () -> Unit, onCompletion: () -> Unit) {
-        mediaPlayer.reset()
+        //mediaPlayer.reset()
         mediaPlayer.setDataSource(trackUrl)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {

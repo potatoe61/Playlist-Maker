@@ -5,10 +5,12 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import com.example.playlistmaker.search.data.dto.Response
 import com.example.playlistmaker.search.data.dto.TrackSearchRequest
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class RetrofitNetworkClient(private val iTunesService: SearchTrackApi, private val context: Context) : NetworkClient {
 
-    override fun doRequest(dto: Any): Response {
+    override suspend fun doRequest(dto: Any): Response {
 
         if (!isConnected()) {
             return Response().apply { resultCode = -1 }
@@ -18,20 +20,22 @@ class RetrofitNetworkClient(private val iTunesService: SearchTrackApi, private v
             return Response().apply { resultCode = 400 }
         }
 
-        val resp = iTunesService.search(dto.expression).execute()
-        val body = resp.body()
-
-        return if (body != null) {
-            body.apply { resultCode = resp.code() }
-        } else {
-            Response().apply { resultCode = resp.code() }
-        }
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = iTunesService.search(dto.expression)
+                response.apply {
+                    resultCode = 200
+                }
+            } catch (e: Throwable) {
+                Response().apply { resultCode = 500 }
+            }
     }
+}
 
     private fun isConnected(): Boolean {
         val connectivityManager = context.getSystemService(
-            Context.CONNECTIVITY_SERVICE
-        ) as ConnectivityManager
+        Context.CONNECTIVITY_SERVICE
+    ) as ConnectivityManager
 
         val capabilities =
             connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
@@ -42,6 +46,5 @@ class RetrofitNetworkClient(private val iTunesService: SearchTrackApi, private v
                 capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> return true
             }
         }
-        return false
-    }
+        return false}
 }

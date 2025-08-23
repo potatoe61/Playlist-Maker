@@ -9,7 +9,8 @@ import com.example.playlistmaker.search.domain.repositories.SearchHistoryReposit
 import com.example.playlistmaker.search.domain.repositories.TrackRepository
 import com.example.playlistmaker.search.presentation.utils.toDomain
 import com.example.playlistmaker.search.presentation.utils.toDto
-
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class TrackRepositoryImpl(
     private val networkClient: NetworkClient,
@@ -21,21 +22,24 @@ class TrackRepositoryImpl(
         const val ERROR = "Error"
     }
 
-    override fun searchTracks(expression: String): Resource<List<Track>> {
+    override fun searchTracks(expression: String): Flow<Resource<List<Track>>> = flow {
         val response = networkClient.doRequest(TrackSearchRequest(expression))
-        return when (response.resultCode) {
+        when (response.resultCode) {
             200 -> {
-                Resource.Success((response as TrackResponse).results.map {
-                    it.toDomain()
-                })
+                with(response as TrackResponse) {
+                    val data = results.map {
+                        it.toDomain()
+                    }
+                    emit(Resource.Success(data))
+                }
             }
 
             -1 -> {
-                Resource.Error(NO_INTERNET_CONNECTION)
+                emit(Resource.Error(NO_INTERNET_CONNECTION))
             }
 
             else -> {
-                Resource.Error("$ERROR: ${response.resultCode}")
+                emit(Resource.Error("$ERROR: ${response.resultCode}"))
             }
         }
     }
