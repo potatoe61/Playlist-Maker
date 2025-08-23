@@ -103,6 +103,10 @@ class PlayerActivity : AppCompatActivity() {
                 playOrPauseButton.setImageResource(R.drawable.play)
                 tvTime.text = state.lastPosition
             }
+
+            is AudioPlayerState.Stopped -> {
+                playOrPauseButton.setImageResource(R.drawable.play)
+            }
         }
     }
 

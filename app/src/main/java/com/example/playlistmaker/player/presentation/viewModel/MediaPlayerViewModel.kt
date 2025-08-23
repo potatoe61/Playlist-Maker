@@ -1,26 +1,23 @@
 package com.example.playlistmaker.player.presentation.viewModel
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.player.presentation.state.AudioPlayerState
-import com.example.playlistmaker.player.presentation.state.PlayerState
-import com.example.playlistmaker.player.presentation.state.PlayerState2
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MediaPlayerViewModel(url: String, private val mediaPlayerInteractor: MediaPlayerInteractor):ViewModel() {
+
+    private var timerJob: Job? = null
+    private var isTrackCompleted = false
 
     init {
         preparePlayer(url)
     }
-
-
-    var mainThreadHandler = Handler(Looper.getMainLooper())
 
     private val mediaPlayerState = MutableLiveData<AudioPlayerState>()
     fun getPlayerState(): LiveData<AudioPlayerState> = mediaPlayerState
@@ -29,19 +26,18 @@ class MediaPlayerViewModel(url: String, private val mediaPlayerInteractor: Media
     fun playbackControl() {
         mediaPlayerInteractor.playbackControl(
             onStarted = {
-                mainThreadHandler.post(trackTimerUpdater())
+                trackTimerUpdater()
             },
             onPaused = {
-                mediaPlayerState.postValue(AudioPlayerState.Playing(mediaPlayerInteractor.getCurrentPosition()))
-                mainThreadHandler.removeCallbacks(trackTimerUpdater())
+                pausePlayer()
             }
         )
     }
-    private fun trackTimerUpdater() = object : Runnable {
-        override fun run() {
-            if (mediaPlayerInteractor.isPlaying()) {
+    private fun trackTimerUpdater() {
+        timerJob = viewModelScope.launch {
+            while (mediaPlayerInteractor.isPlaying()) {
                 mediaPlayerState.postValue(AudioPlayerState.Playing(mediaPlayerInteractor.getCurrentPosition()))
-                mainThreadHandler.postDelayed(this, 300L)
+                delay(300L)
             }
         }
     }
@@ -52,18 +48,31 @@ class MediaPlayerViewModel(url: String, private val mediaPlayerInteractor: Media
                 mediaPlayerState.postValue(AudioPlayerState.Prepared)
             },
             onCompletion = {
-                mainThreadHandler.removeCallbacks(trackTimerUpdater())
+                isTrackCompleted = true
+                timerJob?.cancel()
                 mediaPlayerState.postValue(AudioPlayerState.Prepared)
             }
         )
     }
     fun pausePlayer() {
+        pauseAndPostState(AudioPlayerState.Paused(mediaPlayerInteractor.getCurrentPosition()))
+    }
+
+    fun stopPlayback() {
+        pauseAndPostState(
+            AudioPlayerState.Stopped
+        )
+    }
+
+    private fun pauseAndPostState(state: AudioPlayerState) {
+        timerJob?.cancel()
         mediaPlayerInteractor.pausePlayer()
-        mediaPlayerState.postValue(AudioPlayerState.Paused(mediaPlayerInteractor.getCurrentPosition()))
+        mediaPlayerState.postValue(state)
     }
 
     fun release() {
-        mainThreadHandler.removeCallbacks(trackTimerUpdater())
+        timerJob?.cancel()
+        timerJob = null
         mediaPlayerInteractor.releasePlayer()
     }
 }
