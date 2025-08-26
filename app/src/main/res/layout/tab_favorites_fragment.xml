@@ -2,8 +2,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
 
+    android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/placeholderContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="102dp"
+        android:visibility="gone">
     <ImageView
         android:id="@+id/icon_favorite"
         android:layout_marginTop="106dp"
@@ -24,5 +33,16 @@
         android:textColor="@color/black"
         android:textSize="24sp"
         />
-
+    </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvFavoriteList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:visibility="visible"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:itemCount="5"
+        tools:listitem="@layout/activity_tracks" />
 </LinearLayout>
