@@ -108,7 +108,7 @@ class SearchActivity : Fragment() {
 
                 if (binding.searchEditText.hasFocus() && s?.isEmpty() == true) {
                     binding.progressBar.isVisible = false
-                    viewModel.removeCallback()
+                    viewModel.searchJobCancel()
                     viewModel.currentRequestId++
                     viewModel.setHistoryTrackList()
                 } else {
