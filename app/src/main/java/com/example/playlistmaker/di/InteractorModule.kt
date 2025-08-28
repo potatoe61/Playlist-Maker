@@ -1,5 +1,7 @@
 package com.example.playlistmaker.di
 
+import com.example.playlistmaker.media.domain.FavoriteTrackInteractor
+import com.example.playlistmaker.media.domain.FavoriteTrackInteractorImpl
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.player.domain.interactors.MediaPlayerInteractorImpl
 import com.example.playlistmaker.search.domain.api.TrackInteractor
@@ -27,5 +29,7 @@ val interactorModule = module {
     factory<SharingInteractor> {
         SharingInteractorImpl(get(),get())
     }
-
+    factory<FavoriteTrackInteractor> {
+        FavoriteTrackInteractorImpl(get())
+    }
 }

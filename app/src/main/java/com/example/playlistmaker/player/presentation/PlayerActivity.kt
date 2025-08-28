@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
@@ -27,13 +28,16 @@ class PlayerActivity : AppCompatActivity() {
         const val TRACK = "TRACK"
     }
     private lateinit var playOrPauseButton: ImageView
+    private lateinit var imageLike: ImageView
+
     private var mainThreadHandler: Handler? = null
     private val dateFormat by lazy {
         SimpleDateFormat("mm:ss", Locale.getDefault())
     }
+    private lateinit var track2: Track
     private var songUrl: String = ""
     private val viewModel by viewModel<MediaPlayerViewModel> {
-        parametersOf(songUrl)
+        parametersOf(track2)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +48,7 @@ class PlayerActivity : AppCompatActivity() {
         val intent = getIntent()
         val track: String? = intent.getStringExtra(TRACK)
         val gson = Gson()
+        track2 = gson.fromJson(track, Track::class.java)
         val historyTrackClick = gson.fromJson(track, Track::class.java)
         val tvTrackName = findViewById<TextView>(R.id.trackName)
         val tvArtistName = findViewById<TextView>(R.id.artistName)
@@ -63,14 +68,19 @@ class PlayerActivity : AppCompatActivity() {
         tvDuration?.text = dateFormat.format(historyTrackClick.trackTimeMillis)
 
         mainThreadHandler = Handler(Looper.getMainLooper())
-
         playOrPauseButton = findViewById<ImageView>(R.id.play_butt)
-
+        imageLike = findViewById<ImageView>(R.id.favourites_butt)
         viewModel.getPlayerState().observe(this) {
-            render(it)
+            renderPlayer(it)
         }
         playOrPauseButton.setOnClickListener {
             viewModel.playbackControl()
+        }
+        imageLike.setOnClickListener {
+            viewModel.onFavoriteClicked()
+        }
+        viewModel.getIsFavoriteTrackState().observe(this) {
+            renderLikeButton(it)
         }
 
         Glide.with(this)
@@ -85,7 +95,7 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    private fun render(state: AudioPlayerState) {
+    private fun renderPlayer(state: AudioPlayerState) {
         val tvTime = findViewById<TextView>(R.id.play_time)
         when (state) {
             is AudioPlayerState.Prepared -> {
@@ -107,6 +117,13 @@ class PlayerActivity : AppCompatActivity() {
             is AudioPlayerState.Stopped -> {
                 playOrPauseButton.setImageResource(R.drawable.play)
             }
+        }
+    }
+    private fun renderLikeButton(active: Boolean) {
+        if (active) {
+            imageLike.setImageResource(R.drawable.active_like_button)
+        } else {
+            imageLike.setImageResource(R.drawable.liked)
         }
     }
 

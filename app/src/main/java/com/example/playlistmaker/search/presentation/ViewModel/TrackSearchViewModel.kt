@@ -32,20 +32,27 @@ class TrackSearchViewModel(
     fun getClickDebounce(): LiveData<Track> = clickDebounceLiveData
 
     init {
-        setHistoryTrackList()
+        viewModelScope.launch {
+            setHistoryTrackList()
+        }
     }
 
     fun clearHistory() {
         tracksInteractor.clearHistory()
-        setHistoryTrackList()
+        viewModelScope.launch {
+            setHistoryTrackList()
+        }
     }
 
     fun setHistoryTrackList() {
-        val historyTrackList = tracksInteractor.getHistoryTrack()
-        screenStateLiveData.postValue(
-            if (historyTrackList.isEmpty()) SearchScreenState.EmptyHistory else
-                SearchScreenState.HistoryContent(historyTrackList)
-        )
+        viewModelScope.launch {
+            tracksInteractor.getHistoryTrack().collect {
+                screenStateLiveData.postValue(
+                    if (it.isEmpty()) SearchScreenState.EmptyHistory else
+                        SearchScreenState.HistoryContent(it)
+                )
+            }
+        }
     }
 
     private fun addTrackToHistory(track: Track) {

@@ -7,7 +7,7 @@ interface TrackInteractor {
     fun searchTracks(expression: String): Flow<Pair<List<Track>?, String?>>
 
     fun saveTrackToHistory(tracks: ArrayList<Track>)
-    fun getHistoryTrack(): ArrayList<Track>
+    fun getHistoryTrack(): Flow<ArrayList<Track>>
     fun addTrackToHistory(track: Track)
     fun clearHistory()
 
