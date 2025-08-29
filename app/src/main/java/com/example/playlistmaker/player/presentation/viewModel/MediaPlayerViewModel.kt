@@ -7,18 +7,26 @@ import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.player.presentation.state.AudioPlayerState
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.media.domain.FavoriteTrackInteractor
+import com.example.playlistmaker.player.presentation.state.AddingTrackState
+import com.example.playlistmaker.playlist.PlaylistInteractor
+import com.example.playlistmaker.playlist.model.Playlist
+import com.example.playlistmaker.playlist.model.PlaylistState
 import com.example.playlistmaker.search.domain.model.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class MediaPlayerViewModel(val track: Track, private val mediaPlayerInteractor: MediaPlayerInteractor, private val favoriteInteractor: FavoriteTrackInteractor,):ViewModel() {
+class MediaPlayerViewModel(val track: Track, private val mediaPlayerInteractor: MediaPlayerInteractor, private val favoriteInteractor: FavoriteTrackInteractor,private val playlistInteractor: PlaylistInteractor):ViewModel() {
 
     private var timerJob: Job? = null
-    private var isTrackCompleted = false
 
     private val isFavoriteTrackLiveData = MutableLiveData<Boolean>()
     fun getIsFavoriteTrackState(): LiveData<Boolean> = isFavoriteTrackLiveData
+    private val playlistStateLiveData = MutableLiveData<PlaylistState>()
+    fun getPlaylistState(): LiveData<PlaylistState> = playlistStateLiveData
+
+    private val isAddedTrackStateLiveData = MutableLiveData<AddingTrackState>()
+    fun getIsTrackAddedState(): LiveData<AddingTrackState> = isAddedTrackStateLiveData
 
     init {
         preparePlayer(track.previewUrl)
@@ -27,6 +35,7 @@ class MediaPlayerViewModel(val track: Track, private val mediaPlayerInteractor: 
                 isFavoriteTrackLiveData.value = it
             }
         }
+        getPlaylist()
     }
 
     private val mediaPlayerState = MutableLiveData<AudioPlayerState>()
@@ -58,7 +67,6 @@ class MediaPlayerViewModel(val track: Track, private val mediaPlayerInteractor: 
                 mediaPlayerState.postValue(AudioPlayerState.Prepared)
             },
             onCompletion = {
-                isTrackCompleted = true
                 timerJob?.cancel()
                 mediaPlayerState.postValue(AudioPlayerState.Prepared)
             }
@@ -98,5 +106,31 @@ class MediaPlayerViewModel(val track: Track, private val mediaPlayerInteractor: 
 
             isFavoriteTrackLiveData.value = !isFavorite
         }
+    }
+    fun getPlaylist() {
+        viewModelScope.launch {
+            playlistInteractor.getPlaylists().collect {
+                if (it.isEmpty()) playlistStateLiveData.postValue(PlaylistState.Empty)
+                else playlistStateLiveData.postValue(PlaylistState.Content(it))
+            }
+        }
+    }
+
+    fun addTrackToPlaylist(track: Track, playlist: Playlist) {
+        if (track.trackId.toString() in playlist.tracksId) isAddedTrackStateLiveData.postValue(
+            AddingTrackState.TrackAlreadyAdded(name = playlist.name)
+        ) else {
+            viewModelScope.launch {
+                playlistInteractor.addTrackToPlaylist(track, playlist)
+                getPlaylist()
+                isAddedTrackStateLiveData.postValue(
+                    AddingTrackState.TrackAdded(name = playlist.name)
+                )
+            }
+        }
+    }
+    override fun onCleared() {
+        super.onCleared()
+        release()
     }
 }
