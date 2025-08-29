@@ -1,142 +1,226 @@
 package com.example.playlistmaker.player.presentation
 
-
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.ViewModelProvider
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import com.example.playlistmaker.R
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.playlistmaker.R
-import com.example.playlistmaker.player.presentation.viewModel.MediaPlayerViewModel
-import com.example.playlistmaker.search.domain.model.Track
-import com.google.gson.Gson
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.example.playlistmaker.databinding.FragmentAudioPlayerBinding
+import com.example.playlistmaker.media.dpToPx
+import com.example.playlistmaker.player.presentation.state.AddingTrackState
 import com.example.playlistmaker.player.presentation.state.AudioPlayerState
-import com.example.playlistmaker.player.presentation.state.PlayerState2
+import com.example.playlistmaker.player.presentation.viewModel.MediaPlayerViewModel
+import com.example.playlistmaker.playlist.model.PlaylistState
+import com.example.playlistmaker.search.domain.model.Track
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class PlayerActivity : AppCompatActivity() {
+
+class PlayerActivity : Fragment() {
+
     companion object {
         const val TRACK = "TRACK"
+        const val RADIUS_IMAGE = 8.0f
     }
-    private lateinit var playOrPauseButton: ImageView
-    private lateinit var imageLike: ImageView
 
-    private var mainThreadHandler: Handler? = null
-    private val dateFormat by lazy {
-        SimpleDateFormat("mm:ss", Locale.getDefault())
+    private lateinit var binding: FragmentAudioPlayerBinding
+    private lateinit var playlistsAdapter: PlaylistsBottomSheetAdapter
+
+    private val track by lazy {
+        requireArguments().getParcelable<Track>(TRACK) ?: error("Трек не найден")
     }
-    private lateinit var track2: Track
+
     private var songUrl: String = ""
-    private val viewModel by viewModel<MediaPlayerViewModel> {
-        parametersOf(track2)
+
+    private val viewModelPlayer by viewModel<MediaPlayerViewModel> {
+        parametersOf(track)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentAudioPlayerBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        setContentView(R.layout.activity_player)
-        val backButton = findViewById<Toolbar>(R.id.toolbar_id)
-        val intent = getIntent()
-        val track: String? = intent.getStringExtra(TRACK)
-        val gson = Gson()
-        track2 = gson.fromJson(track, Track::class.java)
-        val historyTrackClick = gson.fromJson(track, Track::class.java)
-        val tvTrackName = findViewById<TextView>(R.id.trackName)
-        val tvArtistName = findViewById<TextView>(R.id.artistName)
-        val tvDuration = findViewById<TextView>(R.id.trackTime)
-        val tvCountry = findViewById<TextView>(R.id.country)
-        val tvYears = findViewById<TextView>(R.id.releaseDate)
-        val tvAlbum = findViewById<TextView>(R.id.collectionName)
-        val tvGenre = findViewById<TextView>(R.id.primaryGenre)
-        val ivTitle = findViewById<ImageView>(R.id.artwork)
-        songUrl = historyTrackClick.previewUrl
-        tvTrackName.text = historyTrackClick.trackName
-        tvArtistName.text = historyTrackClick.artistName
-        tvCountry.text = historyTrackClick.country
-        tvGenre.text = historyTrackClick.primaryGenreName
-        tvAlbum.text = historyTrackClick.collectionName
-        tvYears.text = historyTrackClick.releaseDate.substring(0, 4)
-        tvDuration?.text = dateFormat.format(historyTrackClick.trackTimeMillis)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        mainThreadHandler = Handler(Looper.getMainLooper())
-        playOrPauseButton = findViewById<ImageView>(R.id.play_butt)
-        imageLike = findViewById<ImageView>(R.id.favourites_butt)
-        viewModel.getPlayerState().observe(this) {
+        bindTrackData(track)
+
+        playlistsAdapter = PlaylistsBottomSheetAdapter {
+            viewModelPlayer.addTrackToPlaylist(track, it)
+        }
+        binding.rvPlaylists.adapter = playlistsAdapter
+
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.playlistsBottomSheet).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.overlay.isVisible = false
+                    }
+
+                    else -> {
+                        binding.overlay.isVisible = true
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            }
+        })
+
+        binding.arrowBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        binding.ibAddToAlbum.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+
+        binding.ibPlayButton.setOnClickListener {
+            viewModelPlayer.playbackControl()
+        }
+
+        binding.ibLikeTrack.setOnClickListener {
+            viewModelPlayer.onFavoriteClicked()
+        }
+
+        binding.btnNewPlaylist.setOnClickListener {
+            findNavController().navigate(R.id.action_audioPlayerFragment_to_createPlaylistFragment)
+        }
+
+        viewModelPlayer.getPlayerState().observe(viewLifecycleOwner) {
             renderPlayer(it)
         }
-        playOrPauseButton.setOnClickListener {
-            viewModel.playbackControl()
-        }
-        imageLike.setOnClickListener {
-            viewModel.onFavoriteClicked()
-        }
-        viewModel.getIsFavoriteTrackState().observe(this) {
+
+        viewModelPlayer.getIsFavoriteTrackState().observe(viewLifecycleOwner) {
             renderLikeButton(it)
         }
 
-        Glide.with(this)
-            .load(historyTrackClick.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
-            .placeholder(R.drawable.placeholder_track)
-            .centerCrop()
-            .transform(RoundedCorners(this.resources.getDimensionPixelSize(R.dimen.art_work_radius)))
-            .into(ivTitle)
+        viewModelPlayer.getPlaylistState().observe(viewLifecycleOwner) {
+            renderPlaylistsBottomSheet(it)
+        }
 
-        backButton.setNavigationOnClickListener {
-            finish()
+        viewModelPlayer.getIsTrackAddedState().observe(viewLifecycleOwner) {
+            renderAddedTrackToPlaylist(it)
         }
     }
 
-    private fun renderPlayer(state: AudioPlayerState) {
-        val tvTime = findViewById<TextView>(R.id.play_time)
-        when (state) {
-            is AudioPlayerState.Prepared -> {
-                playOrPauseButton.isEnabled = true
-                tvTime.text = getString(R.string.default_play_time)
-                playOrPauseButton.setImageResource(R.drawable.play)
-            }
-
-            is AudioPlayerState.Playing -> {
-                tvTime.text = state.currentPosition
-                playOrPauseButton.setImageResource(R.drawable.pause)
-            }
-
-            is AudioPlayerState.Paused -> {
-                playOrPauseButton.setImageResource(R.drawable.play)
-                tvTime.text = state.lastPosition
-            }
-
-            is AudioPlayerState.Stopped -> {
-                playOrPauseButton.setImageResource(R.drawable.play)
-            }
-        }
-    }
-    private fun renderLikeButton(active: Boolean) {
-        if (active) {
-            imageLike.setImageResource(R.drawable.active_like_button)
-        } else {
-            imageLike.setImageResource(R.drawable.liked)
-        }
+    override fun onResume() {
+        super.onResume()
+        viewModelPlayer.getPlaylist()
     }
 
     override fun onPause() {
         super.onPause()
-        viewModel.pausePlayer()
-
+        if (!requireActivity().isChangingConfigurations) {
+            viewModelPlayer.stopPlayback()
+        }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        if (isFinishing) {
-            viewModel.release()
+    private fun bindTrackData(track: Track) {
+        binding.tvCountryName.text = track.country
+        binding.tvGenreName.text = track.primaryGenreName
+        binding.tvYearValue.text = track.releaseDate?.take(4) ?: ""
+        binding.tvAlbumName.text = track.collectionName ?: run {
+            binding.tvAlbumName.isVisible = false
+            binding.tvAlbum.isVisible = false
+            return@run ""
+        }
+        binding.tvTrackDuration.text = track.formattedTrackTime
+        binding.tvTrackTime.text = getString(R.string.default_play_time)
+        binding.tvArtistName.text = track.artistName
+        binding.tvHeadTrackName.text = track.trackName
+        songUrl = track.previewUrl
+
+        if (track.artworkUrl100.isNotEmpty()) {
+            Glide.with(this)
+                .load(track.getCoverArtwork)
+                .placeholder(R.drawable.olaceholder_312px)
+                .transform(RoundedCorners(dpToPx(RADIUS_IMAGE, requireContext())))
+                .into(binding.ivCover)
+        } else {
+            binding.ivCover.setImageResource(R.drawable.sad_face)
+        }
+    }
+
+    private fun renderPlayer(state: AudioPlayerState) {
+        when (state) {
+
+            is AudioPlayerState.Prepared -> {
+                binding.ibPlayButton.isEnabled = true
+                binding.tvTrackTime.text = getString(R.string.default_play_time)
+                binding.ibPlayButton.setImageResource(R.drawable.play)
+            }
+
+            is AudioPlayerState.Playing -> {
+                binding.tvTrackTime.text = state.currentPosition
+                binding.ibPlayButton.setImageResource(R.drawable.pause)
+            }
+
+            is AudioPlayerState.Paused -> {
+                binding.ibPlayButton.setImageResource(R.drawable.play)
+                binding.tvTrackTime.text = state.lastPosition
+            }
+
+            is AudioPlayerState.Stopped -> {
+                binding.ibPlayButton.setImageResource(R.drawable.play)
+            }
+        }
+    }
+
+    private fun renderLikeButton(active: Boolean) {
+        if (active) {
+            binding.ibLikeTrack.setImageResource(R.drawable.active_like_button)
+        } else {
+            binding.ibLikeTrack.setImageResource(R.drawable.liked)
+        }
+    }
+
+    private fun renderPlaylistsBottomSheet(state: PlaylistState) {
+        when (state) {
+            is PlaylistState.Content -> {
+                playlistsAdapter.submitList(state.playlist)
+            }
+
+            is PlaylistState.Empty -> {
+                playlistsAdapter.submitList(emptyList())
+            }
+        }
+    }
+
+    private fun renderAddedTrackToPlaylist(state: AddingTrackState) {
+        when (state) {
+            is AddingTrackState.TrackAdded -> {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.added_to_playlist, state.name),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            is AddingTrackState.TrackAlreadyAdded -> {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.already_added_to_playlist, state.name),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 }
