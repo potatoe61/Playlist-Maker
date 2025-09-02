@@ -1,8 +1,20 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.PlaylistMaker" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.PlaylistMaker" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
         <item name="android:statusBarColor">@color/bg</item>
+        <item name="backgroundColor">@color/black_mirage</item>
+        <item name="colorPrimary">#FFFFFF</item>
+        <item name="colorPrimaryVariant">#FFFFFF</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSecondary">@color/black_mirage</item>
+        <item name="colorSecondaryVariant">@color/dark_blue</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="playlistSnackbarBackground">#FFFFFF</item>
+        <item name="playlistSnackbarTextColor">@color/black_mirage</item>
     </style>
+    <attr name="playlistSnackbarBackground" format="color" />
+    <attr name="playlistSnackbarTextColor" format="color" />
 </resources>

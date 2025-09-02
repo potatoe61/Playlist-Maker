@@ -29,7 +29,7 @@ class TrackRepositoryImpl(
         when (response.resultCode) {
             200 -> {
                 with(response as TrackResponse) {
-                    val favoritesTrack = appDatabase.trackDao().getTracksId()
+                    val favoritesTrack = appDatabase.trackDaoFavorite().getTracksId()
                     val data = results.map {
                         it.toDomain()
                     }
@@ -57,7 +57,7 @@ class TrackRepositoryImpl(
 
     override fun getHistoryTrack(): Flow<ArrayList<Track>> = flow {
         val dtoTracks = searchHistoryRepository.getHistoryTrack()
-        val favoritesTracks = appDatabase.trackDao().getTracksId()
+        val favoritesTracks = appDatabase.trackDaoFavorite().getTracksId()
 
         val tracks = dtoTracks.map { it.toDomain() }
         tracks.filter {

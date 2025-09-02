@@ -2,11 +2,14 @@ package com.example.playlistmaker.media.presentation
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import com.example.playlistmaker.R
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.databinding.TabFavoritesFragmentBinding
 import com.example.playlistmaker.media.model.FavoriteTrackState
 import com.example.playlistmaker.media.presentation.viewmodel.FavoriteTrackViewModel
@@ -15,6 +18,7 @@ import com.example.playlistmaker.search.domain.model.Track
 import com.google.gson.Gson
 import com.practicum.playlistmaker.search.ui.TrackAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class TabFavoriteFragment : Fragment() {
 
@@ -69,13 +73,12 @@ class TabFavoriteFragment : Fragment() {
     }
 
     private fun onTrackClickEvents(track: Track) {
-        val audioPlayerIntent =
-            Intent(requireContext(), PlayerActivity::class.java).apply {
-                val itemMedia = track
-                val gson = Gson()
-                val json = gson.toJson(itemMedia)
-                putExtra(PlayerActivity.TRACK, json)
-            }
-        startActivity(audioPlayerIntent)
+        val bundle = Bundle().apply {
+            putParcelable(PlayerActivity.TRACK, track)
+        }
+        findNavController().navigate(
+            R.id.action_mediaLibraryFragment_to_audioPlayerFragment,
+            bundle
+        )
     }
 }

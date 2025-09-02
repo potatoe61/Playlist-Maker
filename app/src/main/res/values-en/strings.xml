@@ -31,4 +31,15 @@
     <string name="createPlayList">New playlist</string>
     <string name="favorite_tracks">Liked tracks</string>
     <string name="playlists">Playlists</string>
+    <string name="name_playlist">Name</string>
+    <string name="description">Description</string>
+    <string name="create">Create</string>
+    <string name="add_to_playlist">Add to playlist</string>
+    <string name="playlist_name_created">Playlist %s created</string>
+    <string name="required_field">Mandatory field</string>
+    <string name="dialog_title">Finish playlist creation</string>
+    <string name="dialog_message">All unsaved data will be lost</string>
+    <string name="dialog_button_cancel">Cancel</string>
+    <string name="dialog_button_exit">Finish</string>
+    <string name="added_to_playlist">Added to playlist %s</string>
 </resources>
