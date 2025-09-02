@@ -25,9 +25,10 @@
             android:layout_height="160dp"
             android:adjustViewBounds="true"
             android:src="@drawable/placeholder_104px"
+            android:background="@color/white"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
-            tools:background="@null" />
+             />
 
     </androidx.cardview.widget.CardView>
 
