@@ -16,7 +16,7 @@ import com.example.playlistmaker.media.dpToPx
 import com.example.playlistmaker.player.presentation.state.AddingTrackState
 import com.example.playlistmaker.player.presentation.state.AudioPlayerState
 import com.example.playlistmaker.player.presentation.viewModel.MediaPlayerViewModel
-import com.example.playlistmaker.playlist.model.PlaylistState
+import com.example.playlistmaker.playlist.presentation.state.PlaylistState
 import com.example.playlistmaker.search.domain.model.Track
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.koin.androidx.viewmodel.ext.android.viewModel

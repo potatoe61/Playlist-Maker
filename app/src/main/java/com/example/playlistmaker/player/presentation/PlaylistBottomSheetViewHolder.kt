@@ -6,7 +6,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.databinding.PlaylistViewBottomSheetBinding
 import com.example.playlistmaker.media.getLocalizedContext
-import com.example.playlistmaker.playlist.model.Playlist
+import com.example.playlistmaker.playlist.presentation.state.Playlist
 import java.util.Locale
 import com.example.playlistmaker.R
 import com.example.playlistmaker.media.dpToPx

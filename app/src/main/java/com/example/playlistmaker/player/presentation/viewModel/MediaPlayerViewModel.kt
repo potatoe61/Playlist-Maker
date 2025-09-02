@@ -8,9 +8,9 @@ import com.example.playlistmaker.player.presentation.state.AudioPlayerState
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.media.domain.FavoriteTrackInteractor
 import com.example.playlistmaker.player.presentation.state.AddingTrackState
-import com.example.playlistmaker.playlist.PlaylistInteractor
-import com.example.playlistmaker.playlist.model.Playlist
-import com.example.playlistmaker.playlist.model.PlaylistState
+import com.example.playlistmaker.playlist.domain.api.PlaylistInteractor
+import com.example.playlistmaker.playlist.presentation.state.Playlist
+import com.example.playlistmaker.playlist.presentation.state.PlaylistState
 import com.example.playlistmaker.search.domain.model.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

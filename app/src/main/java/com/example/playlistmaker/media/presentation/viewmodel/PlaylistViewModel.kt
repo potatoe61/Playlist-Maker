@@ -5,9 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.playlist.PlaylistInteractor
-import com.example.playlistmaker.playlist.model.Playlist
-import com.example.playlistmaker.playlist.model.PlaylistState
+import com.example.playlistmaker.playlist.domain.api.PlaylistInteractor
+import com.example.playlistmaker.playlist.presentation.state.Playlist
+import com.example.playlistmaker.playlist.presentation.state.PlaylistState
 import kotlinx.coroutines.launch
 
 class PlaylistsViewModel(private val interactor: PlaylistInteractor) : ViewModel() {

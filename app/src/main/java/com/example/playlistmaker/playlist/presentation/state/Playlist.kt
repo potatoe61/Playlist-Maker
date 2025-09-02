@@ -1,4 +1,4 @@
-package com.example.playlistmaker.playlist.model
+package com.example.playlistmaker.playlist.presentation.state
 
 data class Playlist(
     val id: Long = 0,

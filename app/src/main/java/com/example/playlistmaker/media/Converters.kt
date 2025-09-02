@@ -4,10 +4,10 @@ package com.example.playlistmaker.media
 import android.content.Context
 import android.content.res.Configuration
 import android.util.TypedValue
-import com.example.playlistmaker.media.data.db.PlaylistEntity
+import com.example.playlistmaker.player.data.db.PlaylistEntity
 import com.example.playlistmaker.media.data.db.TrackEntity
 import com.example.playlistmaker.media.data.db.TrackFavoriteEntity
-import com.example.playlistmaker.playlist.model.Playlist
+import com.example.playlistmaker.playlist.presentation.state.Playlist
 import com.example.playlistmaker.search.data.dto.TrackDto
 import com.example.playlistmaker.search.domain.model.Track
 import java.util.Locale

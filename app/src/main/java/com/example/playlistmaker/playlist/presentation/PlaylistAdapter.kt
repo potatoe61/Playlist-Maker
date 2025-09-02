@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.example.playlistmaker.databinding.PlaylistViewBinding
-import com.example.playlistmaker.playlist.model.Playlist
+import com.example.playlistmaker.playlist.presentation.state.Playlist
 
 
 class PlaylistAdapter : ListAdapter<Playlist, PlaylistViewHolder>(

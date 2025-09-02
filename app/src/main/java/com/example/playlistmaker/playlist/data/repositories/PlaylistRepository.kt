@@ -1,7 +1,7 @@
-package com.example.playlistmaker.playlist
+package com.example.playlistmaker.playlist.data.repositories
 
 import android.net.Uri
-import com.example.playlistmaker.playlist.model.Playlist
+import com.example.playlistmaker.playlist.presentation.state.Playlist
 import com.example.playlistmaker.search.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 

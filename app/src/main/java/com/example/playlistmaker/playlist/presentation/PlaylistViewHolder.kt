@@ -7,7 +7,7 @@ import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlaylistViewBinding
 import com.example.playlistmaker.media.getLocalizedContext
-import com.example.playlistmaker.playlist.model.Playlist
+import com.example.playlistmaker.playlist.presentation.state.Playlist
 import java.util.Locale
 
 class PlaylistViewHolder(private val binding: PlaylistViewBinding) :

@@ -12,7 +12,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.media.presentation.viewmodel.PlaylistsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.example.playlistmaker.databinding.TabMediaFragmentBinding
-import com.example.playlistmaker.playlist.model.PlaylistState
+import com.example.playlistmaker.playlist.presentation.state.PlaylistState
 
 class PlaylistsFragment : Fragment() {
 
